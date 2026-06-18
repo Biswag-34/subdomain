@@ -12,11 +12,11 @@ const buttonVariants = cva(
         primary:
           "bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-5 py-2.5 text-white shadow-[0_16px_38px_rgba(180,22,34,0.22)] hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(180,22,34,0.28)]",
         secondary:
-          "border border-[--border] bg-[--surface-soft] px-5 py-2.5 text-[--accent] hover:-translate-y-0.5 hover:bg-[rgba(234,28,41,0.12)]",
+          "border border-[rgba(234,28,41,0.22)] bg-[rgba(234,28,41,0.1)] px-5 py-2.5 text-[--accent-strong] hover:-translate-y-0.5 hover:bg-[rgba(234,28,41,0.16)]",
         outline:
-          "border border-[--border] bg-white px-4 py-2.5 text-[--foreground] shadow-[0_10px_24px_rgba(234,28,41,0.06)] hover:-translate-y-0.5 hover:border-[--accent]/45 hover:bg-[--surface-soft]",
+          "border border-[rgba(234,28,41,0.2)] bg-white px-4 py-2.5 text-[--foreground] shadow-[0_10px_24px_rgba(234,28,41,0.06)] hover:-translate-y-0.5 hover:border-[--accent]/45 hover:bg-[--surface-soft]",
         ghost:
-          "px-3.5 py-2 text-[--accent] hover:bg-[--surface-soft]",
+          "px-3.5 py-2 text-[--accent-strong] hover:bg-[--surface-soft]",
       },
       size: {
         default: "min-h-10",

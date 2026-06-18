@@ -5,12 +5,12 @@
   --foreground: #231f20;
   --foreground-muted: rgba(35, 31, 32, 0.72);
   --surface: #ffffff;
-  --surface-soft: #fff7f8;
+  --surface-soft: #ffffff;
   --surface-strong: #231f20;
   --accent: #ea1c29;
   --accent-strong: #c21422;
-  --accent-soft: rgba(234, 28, 41, 0.08);
-  --border: rgba(234, 28, 41, 0.14);
+  --accent-soft: rgba(234, 28, 41, 0.1);
+  --border: rgba(234, 28, 41, 0.16);
   --ring: rgba(234, 28, 41, 0.28);
 }
 
@@ -94,7 +94,7 @@ button {
 }
 
 .media-stage {
-  @apply relative overflow-hidden rounded-[1.25rem] bg-[--surface-soft] shadow-[inset_0_0_0_1px_rgba(234,28,41,0.08)];
+  @apply relative overflow-hidden rounded-[1.25rem] bg-white;
 }
 
 @keyframes accordion-down {
