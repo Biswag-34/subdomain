@@ -1,0 +1,10 @@
+configuration,saleable_area_sqft,indicative_price,source,publish_recommendation
+Studio / 1 RK,501,₹67 lakh onwards,Housiey FAQ pricing; treat as inventory-dependent,Use only in gated cost sheet or mark as indicative
+1 Bed,786,₹93 lakh onwards,Homz N Space + Housiey,Safe as starting-price headline if updated frequently
+1 Bed + Study,1088,₹1.31 crore onwards,Homz N Space + Housiey,Gate behind cost sheet CTA
+2 Bed,1165,₹1.40 crore onwards,Homz N Space + Housiey,Gate behind cost sheet CTA
+2 Bed + Study,1371,₹1.59 crore onwards,Homz N Space + Housiey,Gate behind cost sheet CTA
+3 Bed,1730,₹2.04 crore onwards,Homz N Space + Housiey,Gate behind cost sheet CTA
+3 Bed + Study,2006,₹2.33 crore onwards,Homz N Space + Housiey,Gate behind cost sheet CTA
+Loft,2132,₹2.59 crore onwards,Homz N Space + Housiey,Gate behind cost sheet CTA
+4 Bed + Staff,2506,₹2.94 crore onwards,Homz N Space + Housiey,Gate behind cost sheet CTA

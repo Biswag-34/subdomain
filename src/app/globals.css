@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #231f20;
+  --foreground-muted: rgba(35, 31, 32, 0.72);
+  --surface: #ffffff;
+  --surface-soft: #fff7f8;
+  --surface-strong: #231f20;
+  --accent: #ea1c29;
+  --accent-strong: #c21422;
+  --accent-soft: rgba(234, 28, 41, 0.08);
+  --border: rgba(234, 28, 41, 0.14);
+  --ring: rgba(234, 28, 41, 0.28);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #ffffff;
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection {
+  background: rgba(234, 28, 41, 0.14);
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.grain {
+  position: relative;
+}
+
+.grain::before {
+  content: none;
+}
+
+.section-shell {
+  @apply mx-auto w-[min(100%,76rem)] px-4 md:px-5;
+}
+
+.glass-panel {
+  @apply rounded-[1.5rem] bg-[--surface] shadow-[0_18px_40px_rgba(234,28,41,0.08)];
+}
+
+.eyebrow {
+  @apply text-[0.64rem] font-semibold uppercase tracking-[0.24em] text-[--accent];
+}
+
+.display-title {
+  @apply font-[family-name:var(--font-display)] tracking-[-0.04em] text-[--foreground];
+}
+
+.balance-text {
+  text-wrap: balance;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.section-copy {
+  @apply text-[13px] leading-6 text-[--foreground-muted] md:text-sm md:leading-7;
+}
+
+.compact-input {
+  @apply h-10 w-full rounded-xl border border-[--border] bg-white px-3.5 text-sm outline-none transition placeholder:text-[color:rgba(35,31,32,0.42)] focus:border-[--accent]/45 focus:ring-2 focus:ring-[--ring];
+}
+
+.compact-textarea {
+  @apply min-h-24 w-full rounded-xl border border-[--border] bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-[color:rgba(35,31,32,0.42)] focus:border-[--accent]/45 focus:ring-2 focus:ring-[--ring];
+}
+
+.media-stage {
+  @apply relative overflow-hidden rounded-[1.25rem] bg-[--surface-soft] shadow-[inset_0_0_0_1px_rgba(234,28,41,0.08)];
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dialog-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

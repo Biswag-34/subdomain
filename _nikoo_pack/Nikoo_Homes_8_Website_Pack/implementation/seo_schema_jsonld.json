@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ApartmentComplex",
+  "name": "Nikoo Homes 8 at Bhartiya Garden Enclave",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Bellahalli, North Bengaluru",
+    "addressRegion": "Karnataka",
+    "postalCode": "560064",
+    "addressCountry": "IN"
+  },
+  "brand": {
+    "@type": "Brand",
+    "name": "Nikoo Homes"
+  },
+  "description": "Garden-inspired homes near Thanisandra Main Road, North Bengaluru, with Studio to 4 Bed + Staff public unit mix and landscaped community amenities.",
+  "url": "https://nikoohomes.com/nikoo-homes-8/",
+  "amenityFeature": [
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "The Quiet Trail"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Community Garden"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Children’s Play Area"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Linear Garden"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Meditation Garden"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "BBQ Pit"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Organic Kitchen"
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Aroma Garden"
+    }
+  ]
+}
