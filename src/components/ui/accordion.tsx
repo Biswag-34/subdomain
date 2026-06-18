@@ -19,7 +19,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       className={cn(
-        "overflow-hidden rounded-[1.15rem] bg-white shadow-[0_10px_24px_rgba(234,28,41,0.06)]",
+        "overflow-hidden rounded-[1.15rem] bg-[var(--panel-forest)] shadow-[0_14px_34px_rgba(31,58,51,0.16)]",
         className,
       )}
       {...props}
@@ -36,13 +36,13 @@ function AccordionTrigger({
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         className={cn(
-          "group flex flex-1 items-center justify-between gap-4 px-4 py-3.5 text-left font-[family-name:var(--font-display)] text-[1.02rem] tracking-[-0.02em] text-[--foreground]",
+          "group flex flex-1 items-center justify-between gap-4 px-4 py-3.5 text-left font-[family-name:var(--font-display)] text-[1.02rem] tracking-[-0.02em] text-[var(--panel-ink)]",
           className,
         )}
         {...props}
       >
         {children}
-        <ChevronDown className="size-4 shrink-0 text-[--accent] transition duration-300 group-data-[state=open]:rotate-180" />
+        <ChevronDown className="size-4 shrink-0 text-[var(--panel-ink)] transition duration-300 group-data-[state=open]:rotate-180" />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );
@@ -56,7 +56,7 @@ function AccordionContent({
   return (
     <AccordionPrimitive.Content
       className={cn(
-        "overflow-hidden text-[13px] text-[--foreground-muted] data-[state=closed]:animate-[accordion-up_200ms_ease] data-[state=open]:animate-[accordion-down_240ms_ease]",
+        "overflow-hidden text-[13px] text-[var(--panel-muted)] data-[state=closed]:animate-[accordion-up_200ms_ease] data-[state=open]:animate-[accordion-down_240ms_ease]",
         className,
       )}
       {...props}

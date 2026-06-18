@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 
 import "./globals.css";
 
-const bodyFont = Manrope({
+const bodyFont = Inter({
   variable: "--font-body",
   subsets: ["latin"],
 });
@@ -15,9 +15,23 @@ const displayFont = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Nikoo Homes 8 Thanisandra | Price Sheet, Floor Plans & Site Visit",
+  metadataBase: new URL("https://example.com"),
+  title:
+    "Nikoo Homes 8 Bellahalli | Price Sheet, Floor Plans, RERA, Brochure & Site Visit",
   description:
-    "Explore Nikoo Homes 8 at Bhartiya Garden Enclave, North Bengaluru. View configurations, floor plans, RERA details, price guidance, amenities, location and site visit options.",
+    "Explore Nikoo Homes 8 at Bhartiya Garden Enclave in Bellahalli near Thanisandra Main Road. Get latest pricing, floor plans, brochure, RERA details and guided site visit support.",
+  alternates: {
+    canonical: "https://example.com/",
+  },
+  openGraph: {
+    title:
+      "Nikoo Homes 8 Bellahalli | Price Sheet, Floor Plans, RERA, Brochure & Site Visit",
+    description:
+      "Explore Nikoo Homes 8 at Bhartiya Garden Enclave in Bellahalli near Thanisandra Main Road.",
+    images: ["/nikoo/images/home_garden.jpg"],
+    type: "website",
+    url: "https://example.com/",
+  },
 };
 
 export default function RootLayout({

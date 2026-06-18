@@ -38,8 +38,12 @@ export function getLeadMetadata(
   return {
     ...payload,
     deviceType: isMobile ? "mobile" : "desktop",
+    landingPage: window.location.href,
     referrer: document.referrer || "direct",
+    fbclid: params.get("fbclid"),
     gclid: params.get("gclid"),
+    msclkid: params.get("msclkid"),
+    timestamp: new Date().toISOString(),
     utmSource: params.get("utm_source"),
     utmMedium: params.get("utm_medium"),
     utmCampaign: params.get("utm_campaign"),

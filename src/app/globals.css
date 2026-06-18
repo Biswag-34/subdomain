@@ -2,16 +2,35 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #231f20;
-  --foreground-muted: rgba(35, 31, 32, 0.72);
-  --surface: #ffffff;
-  --surface-soft: #ffffff;
-  --surface-strong: #231f20;
-  --accent: #ea1c29;
-  --accent-strong: #c21422;
-  --accent-soft: rgba(234, 28, 41, 0.1);
-  --border: rgba(234, 28, 41, 0.16);
-  --ring: rgba(234, 28, 41, 0.28);
+  --foreground: #1c1c1a;
+  --foreground-muted: #6e6a63;
+  --surface: #f7faf4;
+  --surface-soft: #edf4ec;
+  --surface-lift: #dbe8d7;
+  --surface-strong: #1f3a33;
+  --accent: #174536;
+  --accent-strong: #0d2d25;
+  --accent-soft: rgba(31, 58, 51, 0.1);
+  --terracotta: #2f6f52;
+  --terracotta-soft: #b9d2bd;
+  --sage-soft: #c8d8c5;
+  --clay-panel: #dfeade;
+  --whatsapp: #1d7a52;
+  --whatsapp-soft: #d8eadf;
+  --call-soft: #e6efdf;
+  --visit-soft: #dfeade;
+  --price-soft: #d7e5d2;
+  --panel-forest: #173d32;
+  --panel-sage: #2f5946;
+  --panel-olive: #4e6b55;
+  --panel-clay: #6f8468;
+  --panel-copper: #9bad92;
+  --panel-bark: #22372f;
+  --panel-ink: #f7fff3;
+  --panel-muted: rgba(247, 255, 243, 0.78);
+  --panel-chip: rgba(247, 255, 243, 0.14);
+  --border: #cad8c8;
+  --ring: rgba(47, 111, 82, 0.34);
 }
 
 @theme inline {
@@ -37,7 +56,7 @@ body {
 }
 
 ::selection {
-  background: rgba(234, 28, 41, 0.14);
+  background: rgba(47, 111, 82, 0.18);
 }
 
 a,
@@ -58,15 +77,15 @@ button {
 }
 
 .glass-panel {
-  @apply rounded-lg bg-[--surface] shadow-[0_18px_40px_rgba(234,28,41,0.08)];
+  @apply rounded-lg bg-[var(--surface)] shadow-[0_18px_40px_rgba(31,58,51,0.08)];
 }
 
 .eyebrow {
-  @apply text-[0.64rem] font-bold uppercase text-[--accent];
+  @apply text-[0.64rem] font-bold uppercase text-[var(--accent)];
 }
 
 .display-title {
-  @apply font-[family-name:var(--font-display)] text-[--foreground];
+  @apply font-[family-name:var(--font-display)] text-[var(--foreground)];
 }
 
 .balance-text {
@@ -82,23 +101,27 @@ button {
 }
 
 .section-copy {
-  @apply text-[13px] leading-6 text-[--foreground-muted] md:text-sm md:leading-7;
+  @apply text-[13px] leading-6 text-[var(--foreground-muted)] md:text-sm md:leading-7;
 }
 
 .compact-input {
-  @apply h-10 w-full rounded-lg border border-[--border] bg-white px-3.5 text-sm outline-none transition placeholder:text-[color:rgba(35,31,32,0.42)] focus:border-[--accent]/45 focus:ring-2 focus:ring-[--ring];
+  @apply h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 text-sm outline-none transition placeholder:text-[color:rgba(110,106,99,0.7)] focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--ring)] md:h-10 md:px-3 md:text-sm;
 }
 
 .compact-textarea {
-  @apply min-h-24 w-full rounded-lg border border-[--border] bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-[color:rgba(35,31,32,0.42)] focus:border-[--accent]/45 focus:ring-2 focus:ring-[--ring];
+  @apply min-h-24 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3.5 py-3 text-base outline-none transition placeholder:text-[color:rgba(110,106,99,0.7)] focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--ring)];
 }
 
 .form-label {
-  @apply mb-1 block text-xs font-bold text-[--foreground];
+  @apply mb-0.5 block text-[0.64rem] font-bold uppercase tracking-[0.12em] text-[var(--foreground)];
+}
+
+.form-error {
+  @apply mt-1 text-xs font-semibold text-[var(--terracotta)];
 }
 
 .media-stage {
-  @apply relative overflow-hidden rounded-lg bg-white;
+  @apply relative overflow-hidden rounded-lg bg-[var(--surface)];
 }
 
 @keyframes accordion-down {
