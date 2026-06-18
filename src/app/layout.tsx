@@ -15,9 +15,9 @@ const displayFont = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Nikoo Homes 8 | North Bengaluru Launch Experience",
+  title: "Nikoo Homes 8 Thanisandra | Price Sheet, Floor Plans & Site Visit",
   description:
-    "Lead-focused, high-design real estate landing page for Nikoo Homes 8 at Bhartiya Garden Enclave.",
+    "Explore Nikoo Homes 8 at Bhartiya Garden Enclave, North Bengaluru. View configurations, floor plans, RERA details, price guidance, amenities, location and site visit options.",
 };
 
 export default function RootLayout({

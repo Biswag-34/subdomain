@@ -2,11 +2,15 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 type LeadPayload = {
+  callbackTime?: string;
   email?: string;
+  interestedIn?: string;
   interest?: string;
+  metadata?: Record<string, unknown>;
   name?: string;
   note?: string;
   phone?: string;
+  preferredAction?: string;
   source?: string;
 };
 
