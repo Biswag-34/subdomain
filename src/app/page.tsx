@@ -2,7 +2,6 @@ import { LandingPage } from "@/components/landing-page";
 import {
   getBreadcrumbSchema,
   getDisclosureSchema,
-  getFaqSchema,
   getProjectSchema,
 } from "@/lib/schema";
 
@@ -10,7 +9,6 @@ export default function Page() {
   const schemas = [
     getBreadcrumbSchema(),
     getProjectSchema(),
-    getFaqSchema(),
     getDisclosureSchema(),
   ];
 

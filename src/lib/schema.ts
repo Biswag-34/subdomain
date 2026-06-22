@@ -1,8 +1,4 @@
-import {
-  faqs,
-  micrositeDisclaimer,
-  projectFacts,
-} from "@/data/nikoo-homes-8";
+import { micrositeDisclaimer, projectFacts } from "@/data/nikoo-homes-8";
 
 const siteUrl = "https://example.com";
 
@@ -51,21 +47,6 @@ export function getProjectSchema() {
       projectFacts.images.elevation,
       projectFacts.images.masterPlan,
     ],
-  };
-}
-
-export function getFaqSchema() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
   };
 }
 

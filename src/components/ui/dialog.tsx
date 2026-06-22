@@ -49,13 +49,13 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 w-[min(92vw,34rem)] -translate-x-1/2 -translate-y-1/2 rounded-[1.5rem] bg-[linear-gradient(180deg,var(--surface),var(--surface-soft))] p-6 shadow-[0_28px_90px_rgba(30,16,19,0.22)] outline-none data-[state=open]:animate-[dialog-in_260ms_ease] data-[state=closed]:animate-[dialog-out_180ms_ease]",
+          "fixed left-1/2 top-1/2 z-50 w-[min(92vw,34rem)] -translate-x-1/2 -translate-y-1/2 rounded-[1.75rem] bg-[linear-gradient(180deg,#ffffff_0%,#fff6f3_100%)] p-7 shadow-[0_30px_90px_rgba(71,8,13,0.22)] outline-none data-[state=open]:animate-[dialog-in_260ms_ease] data-[state=closed]:animate-[dialog-out_180ms_ease] md:p-8",
           className,
         )}
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-full bg-[var(--surface-lift)] text-[var(--foreground-muted)] transition hover:bg-[var(--sage-soft)] hover:text-[var(--foreground)]">
+        <DialogPrimitive.Close className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-full bg-[var(--surface-alt)] text-[var(--foreground-muted)] transition hover:bg-[var(--brand-red-soft)] hover:text-[var(--foreground)]">
           <X className="size-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -83,7 +83,7 @@ function DialogTitle({
   return (
     <DialogPrimitive.Title
       className={cn(
-        "font-[family-name:var(--font-display)] text-[2rem] leading-none tracking-[-0.03em] text-[var(--foreground)]",
+        "font-[family-name:var(--font-display)] text-[2rem] leading-none tracking-[-0.05em] text-[var(--foreground)]",
         className,
       )}
       {...props}

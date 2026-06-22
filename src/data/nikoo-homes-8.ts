@@ -2,7 +2,7 @@ export const projectFacts = {
   name: "Nikoo Homes 8",
   publicTitle: "Nikoo Homes 8 at Bhartiya Garden Enclave",
   developer: "Bhartiya Urban Pvt. Ltd.",
-  locationShort: "Bellahalli, near Thanisandra Main Road, North Bengaluru",
+  locationShort: "Thanisandra Main Road, North Bengaluru",
   contactNumber: "+91 90081 77888",
   contactHref: "tel:+919008177888",
   emailLabel: "Email Enquiry",
@@ -17,20 +17,20 @@ export const projectFacts = {
     phase2: "PRM/KA/RERA/1251/309/PR/070526/008629",
   },
   mapUrl:
-    "https://www.google.com/maps/search/Bellahalli,+Thanisandra+Main+Road,+Bengaluru",
+    "https://www.google.com/maps/search/Nikoo+Homes+8+Thanisandra+Main+Road+Bengaluru",
   images: {
-    hero: "/nikoo/images/home_garden.jpg",
+    hero: "/nikoo/images/gallery_new5.webp",
     elevation: "/nikoo/images/elevation.webp",
     township: "/nikoo/images/township.png",
     masterPlan: "/nikoo/images/masterplan.jpg",
   },
-};
+} as const;
 
 export const micrositeDisclaimer =
-  "This is a promotional project microsite operated for enquiries. All prices, plans, availability and timelines are indicative and should be verified before booking.";
+  "This promotional microsite is operated for project enquiries. Pricing, inventory, plans, views and timelines are indicative and must be verified before booking.";
 
 export const consentText =
-  "I agree to be contacted by phone, WhatsApp, SMS or email for this project enquiry.";
+  "I agree to receive project updates by call, WhatsApp, SMS or email.";
 
 export const units = [
   {
@@ -39,7 +39,7 @@ export const units = [
     saleableArea: 501,
     carpetArea: 345,
     price: "On Request",
-    buyerFit: "Compact garden-facing starter home",
+    buyerFit: "Compact starter format",
     image: "/nikoo/plans/Studio.jpg",
     primary: false,
   },
@@ -48,8 +48,8 @@ export const units = [
     label: "1 BHK",
     saleableArea: 786,
     carpetArea: 462,
-    price: "₹95L – ₹1.30Cr*",
-    buyerFit: "Best for first move",
+    price: "Rs. 95L - Rs. 1.30Cr*",
+    buyerFit: "First move upgrade",
     image: "/nikoo/plans/One-Bed.jpg",
     primary: true,
   },
@@ -68,7 +68,7 @@ export const units = [
     label: "2 BHK",
     saleableArea: 1165,
     carpetArea: 725,
-    price: "₹1.40Cr – ₹1.65Cr*",
+    price: "Rs. 1.40Cr - Rs. 1.65Cr*",
     buyerFit: "Family-friendly layout",
     image: "/nikoo/plans/Two-Bed.jpg",
     primary: true,
@@ -88,7 +88,7 @@ export const units = [
     label: "3 BHK",
     saleableArea: 1730,
     carpetArea: 1115,
-    price: "₹2.07Cr – ₹2.40Cr*",
+    price: "Rs. 2.07Cr - Rs. 2.40Cr*",
     buyerFit: "Upgrade home",
     image: "/nikoo/plans/Three-Bed.jpg",
     primary: true,
@@ -108,8 +108,8 @@ export const units = [
     label: "Loft",
     saleableArea: 2132,
     carpetArea: 1279,
-    price: "₹2.55Cr*",
-    buyerFit: "Premium layout",
+    price: "Rs. 2.55Cr*",
+    buyerFit: "Premium double-height living",
     image: "/nikoo/plans/Loft.jpg",
     primary: true,
   },
@@ -118,55 +118,89 @@ export const units = [
     label: "4 BHK + Staff",
     saleableArea: 2506,
     carpetArea: 1634,
-    price: "₹2.99Cr*",
-    buyerFit: "Large-format family unit",
+    price: "Rs. 2.99Cr*",
+    buyerFit: "Large-format family home",
     image: "/nikoo/plans/Four-Bed.jpg",
     primary: true,
   },
 ] as const;
 
-export const pricingSnapshot = [
-  units[1],
-  units[3],
-  units[5],
-  units[8],
-] as const;
-
-export const amenities = [
-  "The Quiet Trail",
-  "Community Garden",
-  "Children’s Play Area",
-  "Meditation Garden",
-  "Aroma Garden",
-  "Sensory Garden",
-  "The Living Canopy",
-  "Tennis Court",
-] as const;
-
-export const nearbyPlaces = [
-  "Bhartiya City",
-  "Manyata Tech Park",
-  "Nagawara Metro Station",
-  "Yelahanka Junction",
-  "Kempegowda International Airport",
-  "Chaman Bhartiya School",
-] as const;
-
-export const faqs = [
+export const uspHighlights = [
   {
-    question: "Where is Nikoo Homes 8 located?",
-    answer:
-      "Nikoo Homes 8 at Bhartiya Garden Enclave is located in Bellahalli near Thanisandra Main Road in North Bengaluru, within the wider Bhartiya City context.",
+    title: "Township-backed living",
+    text: "Nikoo Homes 8 sits inside Bhartiya Garden Enclave, keeping a larger lifestyle ecosystem close to home.",
   },
   {
-    question: "What are the RERA numbers for Nikoo Homes 8?",
-    answer:
-      "Nikoo Homes 8 is listed in two phases: Phase 1 is PRM/KA/RERA/1251/309/PR/070526/008628 and Phase 2 is PRM/KA/RERA/1251/309/PR/070526/008629.",
+    title: "Wide configuration ladder",
+    text: "From compact studios to 4 BHK plus staff formats, the range covers first homes, upgrades and premium layouts.",
   },
   {
-    question: "What home types are available in Nikoo Homes 8?",
-    answer:
-      "The configuration ladder includes Studio, 1 BHK, 1.5 BHK, 2 BHK, 2.5 BHK, 3 BHK, 3.5 BHK, Loft, and 4 BHK + Staff homes.",
+    title: "Garden-led planning",
+    text: "Landscape experiences, shaded walks and themed gardens keep the project identity clear instead of generic.",
+  },
+  {
+    title: "North Bengaluru access",
+    text: "Thanisandra Main Road, Bhartiya City, Manyata Tech Park and airport-side movement stay practically connected.",
+  },
+] as const;
+
+export const amenityHighlights = [
+  {
+    label: "Quiet Trail",
+    text: "A calmer walking spine for everyday movement.",
+  },
+  {
+    label: "Community Garden",
+    text: "A shared green pocket for neighbourly pause points.",
+  },
+  {
+    label: "Children's Play Area",
+    text: "Dedicated family-friendly outdoor activity space.",
+  },
+  {
+    label: "Meditation Garden",
+    text: "A quieter garden edge for reset and reflection.",
+  },
+  {
+    label: "Aroma Garden",
+    text: "Fragrance-led planting that sharpens the landscape identity.",
+  },
+  {
+    label: "Sensory Garden",
+    text: "A softer mix of texture, planting and movement cues.",
+  },
+  {
+    label: "Living Canopy",
+    text: "A shaded green gesture that anchors the outdoor experience.",
+  },
+  {
+    label: "Tennis Court",
+    text: "An active recreation layer within the community plan.",
+  },
+] as const;
+
+export const locationClusters = [
+  {
+    label: "Landmarks",
+    items: [
+      { name: "Bhartiya City", time: "5 min" },
+      { name: "Manyata Tech Park", time: "10 min" },
+    ],
+  },
+  {
+    label: "Education",
+    items: [{ name: "Chaman Bhartiya School", time: "5 min" }],
+  },
+  {
+    label: "Transit",
+    items: [
+      { name: "Nagawara Metro Station", time: "15 min" },
+      { name: "Yelahanka Junction", time: "18 min" },
+    ],
+  },
+  {
+    label: "Airport",
+    items: [{ name: "Kempegowda International Airport", time: "25 min" }],
   },
 ] as const;
 

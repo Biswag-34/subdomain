@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Fraunces, Outfit } from "next/font/google";
 
 import "./globals.css";
 
-const bodyFont = Inter({
+const bodyFont = Outfit({
   variable: "--font-body",
   subsets: ["latin"],
 });
 
-const displayFont = Cormorant_Garamond({
+const displayFont = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title:
     "Nikoo Homes 8 Bellahalli | Price Sheet, Floor Plans, RERA, Brochure & Site Visit",
   description:
-    "Explore Nikoo Homes 8 at Bhartiya Garden Enclave in Bellahalli near Thanisandra Main Road. Get latest pricing, floor plans, brochure, RERA details and guided site visit support.",
+    "Explore Nikoo Homes 8 at Bhartiya Garden Enclave in Bellahalli near Thanisandra Main Road. Request price details, floor plans, brochure and site visit support.",
   alternates: {
     canonical: "https://example.com/",
   },
