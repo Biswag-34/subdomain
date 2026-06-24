@@ -34,15 +34,13 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   min-height: 100vh;
   background: #ffffff;
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
+  overflow-x: hidden;
+  overflow-anchor: none;
 }
 
 ::selection {
@@ -77,6 +75,27 @@ button {
 
 .form-error {
   @apply mt-1 text-xs font-semibold text-[var(--cta-red)];
+}
+
+.reveal-card {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 500ms ease,
+    transform 500ms ease;
+}
+
+.reveal-card[data-reveal="left"] {
+  transform: translateX(-32px);
+}
+
+.reveal-card[data-reveal="right"] {
+  transform: translateX(32px);
+}
+
+.reveal-card.is-visible {
+  opacity: 1;
+  transform: translate(0, 0);
 }
 
 @keyframes dialog-in {
@@ -116,5 +135,13 @@ button {
   }
   to {
     opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

@@ -19,7 +19,7 @@ export const projectFacts = {
   mapUrl:
     "https://www.google.com/maps/search/Nikoo+Homes+8+Thanisandra+Main+Road+Bengaluru",
   images: {
-    hero: "/nikoo/images/gallery_new5.webp",
+    hero: "/nikoo/images/banner-image.webp",
     elevation: "/nikoo/images/elevation.webp",
     township: "/nikoo/images/township.png",
     masterPlan: "/nikoo/images/masterplan.jpg",

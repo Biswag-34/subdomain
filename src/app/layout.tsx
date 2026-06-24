@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
+import Script from "next/script";
 
 import "./globals.css";
 
@@ -44,7 +45,26 @@ export default function RootLayout({
       lang="en"
       className={`${bodyFont.variable} ${displayFont.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body>
+        <Script id="scroll-reset-guard" strategy="beforeInteractive">
+          {`(() => {
+            const resetScroll = () => {
+              if (window.location.hash) return;
+              window.scrollTo(0, 0);
+              window.requestAnimationFrame(() => window.scrollTo(0, 0));
+              window.setTimeout(() => window.scrollTo(0, 0), 240);
+            };
+
+            if ("scrollRestoration" in window.history) {
+              window.history.scrollRestoration = "manual";
+            }
+
+            window.addEventListener("load", resetScroll, { once: true });
+            window.addEventListener("pageshow", resetScroll);
+          })();`}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
