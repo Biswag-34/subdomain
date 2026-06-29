@@ -48,7 +48,6 @@ import { z } from "zod";
 
 import {
   amenityHighlights,
-  consentText,
   getWhatsAppUrl,
   locationClusters,
   micrositeDisclaimer,
@@ -95,17 +94,7 @@ type LeadModal = {
   title: string;
   description: string;
   unit: Unit;
-  prefillEmail?: string;
 };
-
-const optionalEmailSchema = z
-  .string()
-  .trim()
-  .optional()
-  .refine(
-    (value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-    "Enter a valid email address.",
-  );
 
 const mainLeadFormSchema = z.object({
   lead_name: z.string().trim().min(2, "Please enter your name."),
@@ -114,9 +103,7 @@ const mainLeadFormSchema = z.object({
     .trim()
     .min(7, "Please enter a valid phone number.")
     .regex(/^[0-9+\-\s()]+$/, "Use numbers only."),
-  lead_email: optionalEmailSchema,
   lead_unit_type: z.string().min(1, "Please choose an apartment option."),
-  lead_consent: z.boolean().refine(Boolean, "Please accept the consent line."),
 });
 
 const secondaryLeadFormSchema = z.object({
@@ -126,8 +113,6 @@ const secondaryLeadFormSchema = z.object({
     .trim()
     .min(7, "Please enter a valid phone number.")
     .regex(/^[0-9+\-\s()]+$/, "Use numbers only."),
-  lead_email: optionalEmailSchema,
-  lead_consent: z.boolean().refine(Boolean, "Please accept the consent line."),
 });
 
 type MainLeadFormValues = z.infer<typeof mainLeadFormSchema>;
@@ -165,6 +150,18 @@ const heroHighlights = [
   "Studio to 4 BHK + Staff formats",
   "5 min to Bhartiya City and 10 min to Manyata",
 ] as const;
+
+const heroImages = {
+  desktop: "/nikoo/hero/hero-desktop.jpg",
+  tablet: "/nikoo/hero/hero-tablet-original.png",
+  mobile: "/nikoo/hero/hero-mobile-original.png",
+} as const;
+
+const locationMapImages = {
+  desktop: "/nikoo/location/map-desktop.png",
+  tablet: "/nikoo/location/map-tablet.png",
+  mobile: "/nikoo/location/map-mobile.png",
+} as const;
 
 const amenityIcons: Record<string, IconType> = {
   "Quiet Trail": TbRouteAltRight,
@@ -216,15 +213,6 @@ const actionLabels: Record<LeadAction, string> = {
   site_visit: "Book Site Visit",
 };
 
-function getStartingPrice(price: string) {
-  if (price === "On Request") {
-    return price;
-  }
-
-  const [startingPrice] = price.split(" - ");
-  return startingPrice.endsWith("*") ? startingPrice : `${startingPrice}*`;
-}
-
 function buildWhatsAppMessage(action: LeadAction, unitLabel: string) {
   const intentText: Record<LeadAction, string> = {
     price_sheet: "latest price details",
@@ -253,20 +241,18 @@ async function submitLead(payload: Record<string, unknown>) {
 }
 
 function SectionHeader({
-  eyebrow,
   title,
   body,
   align = "left",
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   body?: string;
   align?: "left" | "center";
 }) {
   return (
     <div className={align === "center" ? "mx-auto max-w-4xl text-center" : "max-w-4xl"}>
-      <p className="eyebrow">{eyebrow}</p>
-      <h2 className="display-title mt-3 text-[2.05rem] leading-[0.96] tracking-[-0.05em] md:text-[3.15rem]">
+      <h2 className="display-title text-[2.05rem] leading-[0.96] tracking-[-0.05em] md:text-[3.15rem]">
         {title}
       </h2>
       {body ? (
@@ -286,6 +272,7 @@ function MainLeadForm({
   submitLabel,
   compact = false,
   showUnitField = true,
+  onSuccess,
 }: {
   hiddenBase: HiddenLeadFields;
   formName: string;
@@ -294,6 +281,7 @@ function MainLeadForm({
   submitLabel: string;
   compact?: boolean;
   showUnitField?: boolean;
+  onSuccess?: (values: MainLeadFormValues) => void;
 }) {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [started, setStarted] = useState(false);
@@ -308,9 +296,7 @@ function MainLeadForm({
     defaultValues: {
       lead_name: "",
       lead_phone: "",
-      lead_email: "",
       lead_unit_type: selectedUnit.label,
-      lead_consent: false,
     },
   });
 
@@ -352,7 +338,6 @@ function MainLeadForm({
         lead_unit_type: values.lead_unit_type,
         name: values.lead_name,
         phone: values.lead_phone,
-        email: values.lead_email || undefined,
         interestedIn: values.lead_unit_type,
         preferredAction: "price_sheet",
         source: ctaSource,
@@ -367,15 +352,9 @@ function MainLeadForm({
       reset({
         lead_name: "",
         lead_phone: "",
-        lead_email: "",
         lead_unit_type: selectedUnit.label,
-        lead_consent: false,
       });
-      window.open(
-        getWhatsAppUrl(buildWhatsAppMessage("price_sheet", values.lead_unit_type)),
-        "_blank",
-        "noopener,noreferrer",
-      );
+      onSuccess?.(values);
     } catch {
       setStatus("error");
     }
@@ -411,70 +390,31 @@ function MainLeadForm({
       </div>
 
       {showUnitField ? (
-        <div className="grid gap-2.5 md:grid-cols-[1fr_0.95fr]">
-          <div>
-            <label className="form-label text-[var(--foreground)]" htmlFor={`${formName}-email`}>
-              Email (optional)
-            </label>
-            <input
-              id={`${formName}-email`}
-              className="compact-input"
-              autoComplete="email"
-              inputMode="email"
-              {...register("lead_email")}
-            />
-            {errors.lead_email ? <p className="form-error">{errors.lead_email.message}</p> : null}
-          </div>
+        <div>
           <div>
             <label className="form-label text-[var(--foreground)]" htmlFor={`${formName}-unit`}>
               Interested in
             </label>
-            <select id={`${formName}-unit`} className="compact-input" {...register("lead_unit_type")}>
-              {units.map((unit) => (
-                <option key={unit.slug} value={unit.label}>
-                  {unit.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select id={`${formName}-unit`} className="compact-input select-input" {...register("lead_unit_type")}>
+                {units.map((unit) => (
+                  <option key={unit.slug} value={unit.label}>
+                    {unit.label}
+                  </option>
+                ))}
+              </select>
+              <TbChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[1.1rem] text-[var(--brand-red)]" />
+            </div>
             {errors.lead_unit_type ? <p className="form-error">{errors.lead_unit_type.message}</p> : null}
           </div>
         </div>
       ) : (
-        <>
-          <input type="hidden" {...register("lead_unit_type")} />
-          <div>
-            <label className="form-label text-[var(--foreground)]" htmlFor={`${formName}-email`}>
-              Email (optional)
-            </label>
-            <input
-              id={`${formName}-email`}
-              className="compact-input"
-              autoComplete="email"
-              inputMode="email"
-              {...register("lead_email")}
-            />
-            {errors.lead_email ? <p className="form-error">{errors.lead_email.message}</p> : null}
-          </div>
-        </>
+        <input type="hidden" {...register("lead_unit_type")} />
       )}
-
-      <label
-        className="flex items-start gap-2 text-[0.72rem] leading-5 text-[var(--foreground-muted)]"
-        htmlFor={`${formName}-consent`}
-      >
-        <input
-          id={`${formName}-consent`}
-          className="mt-1 size-4 accent-[var(--brand-red)]"
-          type="checkbox"
-          {...register("lead_consent")}
-        />
-        <span>{consentText}</span>
-      </label>
-      {errors.lead_consent ? <p className="form-error">{errors.lead_consent.message}</p> : null}
 
       <Button
         type="submit"
-        className={`w-full bg-[var(--cta-blue)] text-white hover:bg-[var(--cta-blue-strong)] ${compact ? "min-h-11" : "min-h-12"}`}
+        className={`cta-button-red w-full ${compact ? "min-h-11" : "min-h-12"}`}
         disabled={isSubmitting}
       >
         {isSubmitting ? "Sending..." : submitLabel}
@@ -486,9 +426,9 @@ function MainLeadForm({
         </p>
       ) : null}
 
-      {status === "success" ? (
+      {status === "success" && !onSuccess ? (
         <p className="text-sm font-semibold text-[var(--brand-red)]">
-          Thank you. Our team will continue on WhatsApp shortly.
+          Thank you. We have your request and will connect shortly.
         </p>
       ) : null}
 
@@ -512,7 +452,6 @@ function SecondaryLeadForm({
   selectedUnit,
   action,
   submitLabel,
-  initialEmail,
 }: {
   hiddenBase: HiddenLeadFields;
   formName: string;
@@ -520,7 +459,6 @@ function SecondaryLeadForm({
   selectedUnit: Unit;
   action: LeadAction;
   submitLabel: string;
-  initialEmail?: string;
 }) {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const {
@@ -533,8 +471,6 @@ function SecondaryLeadForm({
     defaultValues: {
       lead_name: "",
       lead_phone: "",
-      lead_email: initialEmail ?? "",
-      lead_consent: false,
     },
   });
 
@@ -542,10 +478,8 @@ function SecondaryLeadForm({
     reset({
       lead_name: "",
       lead_phone: "",
-      lead_email: initialEmail ?? "",
-      lead_consent: false,
     });
-  }, [initialEmail, reset]);
+  }, [reset, selectedUnit.slug]);
 
   const onSubmit = async (values: SecondaryLeadFormValues) => {
     setStatus("idle");
@@ -562,7 +496,6 @@ function SecondaryLeadForm({
         lead_unit_type: selectedUnit.label,
         name: values.lead_name,
         phone: values.lead_phone,
-        email: values.lead_email || undefined,
         interestedIn: selectedUnit.label,
         preferredAction: action,
         source: ctaSource,
@@ -577,14 +510,7 @@ function SecondaryLeadForm({
       reset({
         lead_name: "",
         lead_phone: "",
-        lead_email: initialEmail ?? "",
-        lead_consent: false,
       });
-      window.open(
-        getWhatsAppUrl(buildWhatsAppMessage(action, selectedUnit.label)),
-        "_blank",
-        "noopener,noreferrer",
-      );
     } catch {
       setStatus("error");
     }
@@ -612,35 +538,9 @@ function SecondaryLeadForm({
         />
         {errors.lead_phone ? <p className="form-error">{errors.lead_phone.message}</p> : null}
       </div>
-      <div>
-        <label className="form-label" htmlFor={`${formName}-email`}>
-          Email (optional)
-        </label>
-        <input
-          id={`${formName}-email`}
-          className="compact-input"
-          autoComplete="email"
-          inputMode="email"
-          {...register("lead_email")}
-        />
-        {errors.lead_email ? <p className="form-error">{errors.lead_email.message}</p> : null}
-      </div>
-      <label
-        className="flex items-start gap-2 text-[0.72rem] leading-5 text-[var(--foreground-muted)]"
-        htmlFor={`${formName}-consent`}
-      >
-        <input
-          id={`${formName}-consent`}
-          className="mt-1 size-4 accent-[var(--brand-red)]"
-          type="checkbox"
-          {...register("lead_consent")}
-        />
-        <span>{consentText}</span>
-      </label>
-      {errors.lead_consent ? <p className="form-error">{errors.lead_consent.message}</p> : null}
       <Button
         type="submit"
-        className="min-h-12 w-full bg-[var(--brand-red)] text-white hover:bg-[var(--brand-red-strong)]"
+        className="cta-button-red min-h-12 w-full"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Sending..." : submitLabel}
@@ -674,9 +574,10 @@ export function LandingPage() {
   const [activeLocationCategory, setActiveLocationCategory] = useState<
     (typeof locationClusters)[number]["label"]
   >(locationClusters[0]?.label ?? "Landmarks");
-  const [footerEmail, setFooterEmail] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hasScrolledHeader, setHasScrolledHeader] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [isLocationMapOpen, setIsLocationMapOpen] = useState(false);
 
   const hiddenBase = useMemo<HiddenLeadFields>(() => {
     if (typeof window === "undefined") {
@@ -820,7 +721,6 @@ export function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  const selectedStartingPrice = useMemo(() => getStartingPrice(selectedUnit.price), [selectedUnit.price]);
   const modalLeadAction: LeadAction =
     leadModal?.kind && leadModal.kind !== "instant_call" ? leadModal.kind : "price_sheet";
 
@@ -830,7 +730,6 @@ export function LandingPage() {
     title: string,
     description: string,
     unit = selectedUnit,
-    prefillEmail?: string,
   ) => {
     setLeadModal({
       kind,
@@ -838,9 +737,26 @@ export function LandingPage() {
       title,
       description,
       unit,
-      prefillEmail,
     });
   };
+
+  const showSuccessToast = () => {
+    setToastMessage("Thank you. Your enquiry has been received.");
+  };
+
+  const redirectToThankYou = () => {
+    window.location.assign("/thank-you");
+  };
+
+  useEffect(() => {
+    if (!toastMessage) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setToastMessage(""), 3600);
+
+    return () => window.clearTimeout(timer);
+  }, [toastMessage]);
 
   const scrollToSection = (sectionId: string, source: string) => {
     if (typeof window === "undefined") {
@@ -942,7 +858,7 @@ export function LandingPage() {
 
             <div className="flex items-center gap-2">
               <Button
-                className="hidden bg-[var(--cta-blue)] text-white hover:bg-[var(--cta-blue-strong)] lg:inline-flex"
+                className="cta-button-red hidden lg:inline-flex"
                 size="sm"
                 onClick={() =>
                   openLeadModal(
@@ -994,9 +910,51 @@ export function LandingPage() {
       <main className="pb-24 lg:pb-10">
         <section id="hero" className="relative overflow-hidden bg-white">
           <div ref={heroTopRef} className="absolute top-0 h-px w-px" aria-hidden="true" />
-          <div className="absolute inset-0 hidden md:block">
+          <div className="hero-entry lg:hidden">
             <Image
-              src={projectFacts.images.hero}
+              src={heroImages.mobile}
+              alt="Nikoo Homes 8 hero banner"
+              width={941}
+              height={1672}
+              sizes="100vw"
+              className="block h-auto w-full sm:hidden"
+              priority
+              unoptimized
+            />
+            <Image
+              src={heroImages.tablet}
+              alt="Nikoo Homes 8 hero banner"
+              width={1086}
+              height={1448}
+              sizes="100vw"
+              className="hidden h-auto w-full sm:block"
+              priority
+              unoptimized
+            />
+          </div>
+
+          <div className="section-shell lg:hidden">
+            <div className="hero-entry px-0 pb-1 pt-5 text-[var(--foreground)]">
+              <p className="max-w-[24ch] text-[1.05rem] font-semibold leading-6 text-[var(--foreground)]">
+                Garden residences shaped for the Thanisandra growth corridor.
+              </p>
+              <div className="mt-4 grid grid-cols-1 gap-3">
+                {heroHighlights.map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-start gap-3 text-sm font-semibold leading-6 text-[var(--foreground)]"
+                  >
+                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-[var(--brand-red)]" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute inset-0 hidden lg:block">
+            <Image
+              src={heroImages.desktop}
               alt="Nikoo Homes 8 hero view"
               fill
               sizes="100vw"
@@ -1006,52 +964,10 @@ export function LandingPage() {
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,7,8,0.78)_0%,rgba(11,7,8,0.4)_50%,rgba(11,7,8,0.16)_100%)]" />
           </div>
 
-          <div className="section-shell relative">
+          <div className="section-shell relative hidden lg:block">
             <div className="grid min-h-[calc(100svh-8rem)] gap-4 pb-6 pt-0 md:min-h-[82svh] md:gap-8 md:pb-10 md:pt-24 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-              <div className="md:hidden">
-                <div className="hero-entry relative ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] h-[58svh] min-h-[28rem] w-screen overflow-hidden">
-                  <div className="absolute inset-0 bg-black/10" />
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={projectFacts.images.hero}
-                      alt="Nikoo Homes 8 hero banner"
-                      fill
-                      sizes="100vw"
-                      className="object-cover object-center"
-                      priority
-                    />
-                  </div>
-                </div>
-
-                <div className="hero-entry px-0 pb-1 pt-5 text-[var(--foreground)]">
-                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-[var(--brand-red)]">
-                    Bhartiya City presents
-                  </p>
-                  <h1 className="mt-3 font-[family-name:var(--font-display)] text-[2.7rem] leading-[0.9] tracking-[-0.05em] text-[var(--foreground)]">
-                    Nikoo Homes 8
-                  </h1>
-                  <p className="mt-3 max-w-[22ch] text-[1rem] font-medium leading-6 text-[var(--foreground-muted)]">
-                    Garden residences shaped for the Thanisandra growth corridor.
-                  </p>
-                  <div className="mt-4 grid grid-cols-1 gap-3">
-                    {heroHighlights.map((item) => (
-                      <div key={item} className="flex items-start gap-3 text-sm font-semibold leading-6 text-[var(--foreground)]">
-                        <span className="mt-2 h-2.5 w-2.5 rounded-full bg-[var(--brand-red)]" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="hero-entry hidden text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)] md:block md:max-w-[42rem] lg:pt-2">
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--brand-cream)]">
-                  Bhartiya City presents
-                </p>
-                <h1 className="mt-4 font-[family-name:var(--font-display)] text-[clamp(3rem,6vw,5.8rem)] leading-[0.88] tracking-[-0.05em] text-[#fff8f2]">
-                  Nikoo Homes 8
-                </h1>
-                <p className="mt-3 max-w-[20ch] text-[1.05rem] font-semibold leading-7 text-[#fff4ee] md:text-[1.3rem] md:leading-8">
+              <div className="hero-entry text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)] md:max-w-[42rem] lg:pt-2">
+                <p className="max-w-[20ch] text-[1.05rem] font-semibold leading-7 text-[#fff4ee] md:text-[1.3rem] md:leading-8">
                   Garden residences shaped for the Thanisandra growth corridor.
                 </p>
                 <div className="mt-6 grid max-w-3xl gap-3 text-sm font-semibold leading-6 text-[#fff4ee] md:grid-cols-3">
@@ -1065,10 +981,7 @@ export function LandingPage() {
 
               <div className="hero-entry hidden w-full rounded-[1.9rem] bg-[var(--surface)] p-4 shadow-[0_28px_80px_rgba(71,8,13,0.18)] md:p-5 lg:ml-auto lg:block lg:max-w-[23rem]">
                 <div className="rounded-[1.3rem] bg-[var(--brand-red)] px-4 py-3 text-[var(--ink-inverse)]">
-                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--brand-cream)]">
-                    Main Enquiry
-                  </p>
-                  <h2 className="mt-2 text-[1.15rem] font-semibold leading-tight text-[var(--ink-inverse)]">
+                  <h2 className="text-[1.15rem] font-semibold leading-tight text-[var(--ink-inverse)]">
                     Get exact availability and current pricing in one response.
                   </h2>
                 </div>
@@ -1079,6 +992,7 @@ export function LandingPage() {
                   selectedUnit={selectedUnit}
                   submitLabel="Enquiry"
                   compact
+                  onSuccess={showSuccessToast}
                 />
               </div>
             </div>
@@ -1089,8 +1003,7 @@ export function LandingPage() {
           <div className="section-shell py-6">
             <div className="rounded-[2rem] bg-[var(--surface)] p-4 shadow-[0_24px_70px_rgba(71,8,13,0.08)]">
               <div className="rounded-[1.3rem] bg-[var(--surface-alt)] px-4 py-4">
-                <p className="eyebrow">Main Enquiry</p>
-                <h2 className="display-title mt-2 text-[1.6rem] leading-[1] tracking-[-0.04em]">
+                <h2 className="display-title text-[1.6rem] leading-[1] tracking-[-0.04em]">
                   Enquire now
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[var(--foreground-muted)]">
@@ -1103,6 +1016,7 @@ export function LandingPage() {
                 ctaSource="mobile-hero-main-form"
                 selectedUnit={selectedUnit}
                 submitLabel="Enquiry"
+                onSuccess={showSuccessToast}
               />
             </div>
           </div>
@@ -1142,10 +1056,7 @@ export function LandingPage() {
 
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--brand-red)]">
-                              Point {String(index + 1).padStart(2, "0")}
-                            </p>
-                            <h3 className="mt-2 text-[1.35rem] font-semibold tracking-[-0.03em] text-[var(--foreground)] md:text-[1.55rem]">
+                            <h3 className="text-[1.35rem] font-semibold tracking-[-0.03em] text-[var(--foreground)] md:text-[1.55rem]">
                               {item.title}
                             </h3>
                           </div>
@@ -1207,7 +1118,7 @@ export function LandingPage() {
                     onChange={(event) =>
                       setSelectedUnit(units.find((unit) => unit.slug === event.target.value) ?? primaryUnit)
                     }
-                    className="compact-input min-h-12 appearance-none pr-11 text-base font-semibold"
+                    className="compact-input select-input min-h-12 pr-11 text-base font-semibold"
                   >
                     {units.map((unit) => (
                       <option key={unit.slug} value={unit.slug}>
@@ -1221,38 +1132,8 @@ export function LandingPage() {
 
               <div className="mt-5 grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
                 <div className="rounded-[1.6rem] bg-[var(--surface-alt)] p-4 md:p-5">
-                  <div className="grid grid-cols-2 gap-3 rounded-[1.25rem] bg-white px-4 py-4 shadow-[0_12px_28px_rgba(71,8,13,0.06)]">
-                    <div>
-                      <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--brand-red)]">
-                        Selected
-                      </p>
-                      <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{selectedUnit.label}</p>
-                    </div>
-                    <div>
-                      <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--brand-red)]">
-                        Starting
-                      </p>
-                      <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{selectedStartingPrice}</p>
-                    </div>
-                    <div>
-                      <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--brand-red)]">
-                        Saleable area
-                      </p>
-                      <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">
-                        {selectedUnit.saleableArea} sq ft
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--brand-red)]">
-                        Best fit
-                      </p>
-                      <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{selectedUnit.buyerFit}</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 hidden md:block">
-                    <p className="eyebrow">Basic enquiry</p>
-                    <h3 className="display-title mt-2 text-[1.45rem] leading-[1] tracking-[-0.04em]">
+                  <div className="hidden md:block">
+                    <h3 className="display-title text-[1.45rem] leading-[1] tracking-[-0.04em]">
                       Ask for this plan
                     </h3>
                     <MainLeadForm
@@ -1270,13 +1151,12 @@ export function LandingPage() {
                 <div className="rounded-[1.6rem] bg-[#fffaf8] p-4 md:p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="eyebrow">Plan preview</p>
-                      <h3 className="display-title mt-2 text-[1.55rem] leading-[1] tracking-[-0.04em]">
+                      <h3 className="display-title text-[1.55rem] leading-[1] tracking-[-0.04em]">
                         {selectedUnit.label}
                       </h3>
                     </div>
                     <div className="rounded-full bg-[var(--surface-alt)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-red)]">
-                      Miniature view
+                      {selectedUnit.saleableArea} sq ft
                     </div>
                   </div>
 
@@ -1295,7 +1175,7 @@ export function LandingPage() {
 
               <div className="mt-5 md:hidden">
                 <Button
-                  className="min-h-12 w-full bg-[var(--cta-blue)] text-white hover:bg-[var(--cta-blue-strong)]"
+                  className="cta-button-red min-h-12 w-full"
                   onClick={() =>
                     openLeadModal(
                       "floor_plan",
@@ -1392,27 +1272,43 @@ export function LandingPage() {
                     body="Keep the live map on the left and compare surrounding destinations by category on the right."
                   />
                   <div className="mt-6 overflow-hidden rounded-[1.7rem] shadow-[0_18px_48px_rgba(71,8,13,0.1)]">
-                    <div className="relative bg-[var(--surface-alt)]">
-                      <iframe
-                        title="Nikoo Homes 8 location map"
-                        src="https://www.google.com/maps?q=Nikoo+Homes+8+Thanisandra+Main+Road+Bengaluru&z=14&output=embed"
-                        className="h-[22rem] w-full"
-                        loading="lazy"
-                        tabIndex={-1}
-                        referrerPolicy="no-referrer-when-downgrade"
+                    <div className="relative h-[22rem] bg-[var(--surface-alt)]">
+                      <Image
+                        src={locationMapImages.mobile}
+                        alt="Nikoo Homes 8 approximate location map"
+                        fill
+                        sizes="100vw"
+                        className="object-contain sm:hidden"
+                        unoptimized
+                      />
+                      <Image
+                        src={locationMapImages.tablet}
+                        alt="Nikoo Homes 8 approximate location map"
+                        fill
+                        sizes="100vw"
+                        className="hidden object-contain sm:block lg:hidden"
+                        unoptimized
+                      />
+                      <Image
+                        src={locationMapImages.desktop}
+                        alt="Nikoo Homes 8 approximate location map"
+                        fill
+                        sizes="100vw"
+                        className="hidden object-contain lg:block"
+                        unoptimized
                       />
                       <div className="pointer-events-none absolute inset-x-4 bottom-4 flex items-center justify-between gap-4">
                         <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-red)] shadow-[0_14px_30px_rgba(71,8,13,0.08)]">
                           Thanisandra Main Road
                         </div>
-                        <a
-                          href={projectFacts.mapUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="pointer-events-auto rounded-full bg-[var(--cta-blue)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white"
+                        <button
+                          type="button"
+                          onClick={() => setIsLocationMapOpen(true)}
+                          className="cta-button-red pointer-events-auto inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em]"
                         >
-                          Open Map
-                        </a>
+                          <PiMapPinAreaDuotone className="text-base" />
+                          See approx location
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1474,8 +1370,7 @@ export function LandingPage() {
             <div className="grid gap-6 rounded-[2rem] bg-[var(--surface)] p-5 shadow-[0_24px_70px_rgba(71,8,13,0.08)] lg:grid-cols-[0.82fr_1.18fr] lg:p-8">
               <div className="relative pl-4">
                 <span className="absolute left-0 top-1 h-24 w-1 rounded-full bg-[var(--brand-red)]" />
-                <p className="eyebrow">Final Enquiry</p>
-                <h2 className="display-title mt-3 max-w-[13ch] text-[2rem] leading-[0.96] tracking-[-0.05em] md:text-[3rem]">
+                <h2 className="display-title max-w-[13ch] text-[2rem] leading-[0.96] tracking-[-0.05em] md:text-[3rem]">
                   Request the right apartment update without a long form.
                 </h2>
                 <p className="mt-3 max-w-lg text-sm leading-6 text-[var(--foreground-muted)] md:text-base md:leading-7">
@@ -1499,6 +1394,7 @@ export function LandingPage() {
                   ctaSource="final-main-form"
                   selectedUnit={selectedUnit}
                   submitLabel="Enquiry"
+                  onSuccess={redirectToThankYou}
                 />
               </div>
             </div>
@@ -1506,9 +1402,9 @@ export function LandingPage() {
         </section>
       </main>
 
-      <footer className="bg-[var(--background)] px-4 py-8 text-[var(--foreground)]">
+      <footer className="bg-[var(--background)] py-8 text-[var(--foreground)]">
         <div className="section-shell">
-          <div className="grid gap-8 lg:grid-cols-[1fr_1fr_0.9fr]">
+          <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr]">
             <div>
               <div className="flex items-center gap-4">
                 <Image src="/nikoo/logo-red.png" alt="Nikoo Homes logo" width={151} height={65} className="h-11 w-auto" />
@@ -1525,37 +1421,6 @@ export function LandingPage() {
             </div>
 
             <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--brand-red)]">
-                Get updates
-              </p>
-              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                <input
-                  value={footerEmail}
-                  onChange={(event) => setFooterEmail(event.target.value)}
-                  placeholder="Enter your email"
-                  className="compact-input flex-1"
-                  inputMode="email"
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    openLeadModal(
-                      "brochure",
-                      "footer-updates",
-                      "Get project updates",
-                      "Share the remaining details and we will continue with brochure and project updates.",
-                      selectedUnit,
-                      footerEmail || undefined,
-                    )
-                  }
-                  className="min-h-11 rounded-full bg-[var(--cta-red)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--cta-red-strong)]"
-                >
-                  Request Updates
-                </button>
-              </div>
-            </div>
-
-            <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--brand-red)]">RERA</p>
               <p className="mt-3 text-sm leading-6 text-[var(--foreground-muted)]">Phase 1: {projectFacts.rera.phase1}</p>
               <p className="mt-2 text-sm leading-6 text-[var(--foreground-muted)]">Phase 2: {projectFacts.rera.phase2}</p>
@@ -1566,31 +1431,31 @@ export function LandingPage() {
         </div>
       </footer>
 
-      <div className="mobile-sticky-actions fixed bottom-4 left-3 right-3 z-50 lg:hidden">
-        <div className="grid grid-cols-3 gap-2">
+      <div className="mobile-sticky-actions fixed inset-x-0 bottom-0 z-50 lg:hidden">
+        <div className="grid min-h-16 grid-cols-3 overflow-hidden border-t border-[rgba(143,23,32,0.18)] bg-white/96 shadow-[0_-12px_34px_rgba(71,8,13,0.12)] backdrop-blur-xl">
           <button
             type="button"
+            aria-label="Enquiry"
             onClick={() => scrollToSection("main-enquiry-form", "mobile-sticky-enquiry")}
-            className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-[1.15rem] border border-white/75 bg-white/90 text-[var(--cta-blue)] shadow-[0_14px_34px_rgba(31,102,229,0.16)] backdrop-blur"
+            className="flex min-h-16 items-center justify-center border-r border-[rgba(143,23,32,0.16)] text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
           >
-            <PiEnvelopeSimpleDuotone className="text-[1.2rem]" />
-            <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em]">Enquiry</span>
+            <PiEnvelopeSimpleDuotone className="text-[1.85rem]" />
           </button>
           <button
             type="button"
+            aria-label="Floor plan"
             onClick={() => scrollToSection("floorplans", "mobile-sticky-floorplan")}
-            className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-[1.15rem] border border-white/75 bg-white/90 text-[var(--brand-red)] shadow-[0_14px_34px_rgba(143,23,32,0.14)] backdrop-blur"
+            className="flex min-h-16 items-center justify-center border-r border-[rgba(143,23,32,0.16)] text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
           >
-            <PiHouseLineDuotone className="text-[1.2rem]" />
-            <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em]">Floor Plan</span>
+            <PiHouseLineDuotone className="text-[1.85rem]" />
           </button>
           <button
             type="button"
+            aria-label="Site visit"
             onClick={() => scrollToSection("final-enquiry", "mobile-sticky-sitevisit")}
-            className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-[1.15rem] border border-white/75 bg-white/90 text-[var(--cta-green)] shadow-[0_14px_34px_rgba(31,157,89,0.14)] backdrop-blur"
+            className="flex min-h-16 items-center justify-center text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
           >
-            <PiCalendarDotsDuotone className="text-[1.2rem]" />
-            <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em]">Site Visit</span>
+            <PiCalendarDotsDuotone className="text-[1.85rem]" />
           </button>
         </div>
       </div>
@@ -1637,11 +1502,69 @@ export function LandingPage() {
               "Tell us how to reach you and we will coordinate a guided site visit.",
             )
           }
-          className="flex size-14 items-center justify-center rounded-full bg-[rgba(255,255,255,0.94)] text-[var(--cta-blue)] shadow-[0_18px_40px_rgba(24,86,198,0.16)]"
+          className="flex size-14 items-center justify-center rounded-full bg-[rgba(255,255,255,0.94)] text-[var(--brand-red)] shadow-[0_18px_40px_rgba(154,23,36,0.16)]"
         >
           <PiCalendarDotsDuotone className="text-[1.7rem]" />
         </button>
       </div>
+
+      {isLocationMapOpen ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Approximate location map"
+          className="fixed inset-0 z-[70] bg-[rgba(18,7,9,0.94)] p-3 backdrop-blur-md md:p-6"
+        >
+          <button
+            type="button"
+            aria-label="Close location map"
+            onClick={() => setIsLocationMapOpen(false)}
+            className="absolute right-4 top-4 z-10 flex size-12 items-center justify-center rounded-full border border-white/45 bg-white text-[var(--brand-red)] shadow-[0_18px_42px_rgba(0,0,0,0.24)] transition hover:bg-[#fff1ef] md:right-6 md:top-6"
+          >
+            <TbX className="text-2xl" />
+          </button>
+          <div className="relative h-full w-full overflow-hidden rounded-[1.25rem] bg-[#fff8f2] shadow-[0_30px_90px_rgba(0,0,0,0.28)]">
+            <Image
+              src={locationMapImages.mobile}
+              alt="Nikoo Homes 8 approximate location map"
+              fill
+              sizes="100vw"
+              className="object-contain sm:hidden"
+              unoptimized
+            />
+            <Image
+              src={locationMapImages.tablet}
+              alt="Nikoo Homes 8 approximate location map"
+              fill
+              sizes="100vw"
+              className="hidden object-contain sm:block lg:hidden"
+              unoptimized
+            />
+            <Image
+              src={locationMapImages.desktop}
+              alt="Nikoo Homes 8 approximate location map"
+              fill
+              sizes="100vw"
+              className="hidden object-contain lg:block"
+              unoptimized
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {toastMessage ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className="toast-message fixed left-1/2 top-5 z-[60] w-[min(calc(100vw-1.5rem),34rem)] -translate-x-1/2 rounded-[1.6rem] border border-white/70 px-5 py-5 text-center text-base font-bold text-white shadow-[0_30px_90px_rgba(71,8,13,0.28)] backdrop-blur-xl md:px-7 md:py-6 md:text-lg"
+        >
+          <span className="mx-auto mb-3 block h-1.5 w-20 rounded-full bg-white/90 shadow-[0_0_22px_rgba(255,255,255,0.55)]" />
+          {toastMessage}
+          <span className="mt-2 block text-sm font-medium text-white/82">
+            Our team will connect with you shortly.
+          </span>
+        </div>
+      ) : null}
 
       <Dialog open={Boolean(leadModal)} onOpenChange={(open) => !open && setLeadModal(null)}>
         <DialogContent>
@@ -1666,7 +1589,7 @@ export function LandingPage() {
                   <a
                     href={projectFacts.contactHref}
                     onClick={() => handleCallClick(`${leadModal.ctaSource}-call`)}
-                    className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--cta-blue)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--cta-blue-strong)]"
+                    className="cta-button-red flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold"
                   >
                     <PiPhoneDuotone className="text-xl" />
                     Call now
@@ -1692,7 +1615,6 @@ export function LandingPage() {
                   selectedUnit={leadModal.unit}
                   action={modalLeadAction}
                   submitLabel={actionLabels[modalLeadAction]}
-                  initialEmail={leadModal.prefillEmail}
                 />
               </div>
 
