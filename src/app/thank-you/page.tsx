@@ -13,7 +13,7 @@ export default function ThankYouPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[var(--brand-red-deep)] text-white">
       <Image
-        src="/nikoo/hero/hero-desktop.jpg"
+        src="/nikoo/hero/hero-desktop-july.png"
         alt="Nikoo Homes 8 township view"
         fill
         sizes="100vw"

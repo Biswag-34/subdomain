@@ -29,7 +29,7 @@ export const metadata: Metadata = {
       "Nikoo Homes 8 Bellahalli | Price Sheet, Floor Plans, RERA, Brochure & Site Visit",
     description:
       "Explore Nikoo Homes 8 at Bhartiya Garden Enclave in Bellahalli near Thanisandra Main Road.",
-    images: ["/nikoo/images/home_garden.jpg"],
+    images: ["/nikoo/hero/hero-desktop-july.png"],
     type: "website",
     url: "https://example.com/",
   },

@@ -28,10 +28,8 @@ import {
   PiDownloadSimpleDuotone,
   PiEnvelopeSimpleDuotone,
   PiFlowerLotusDuotone,
-  PiFlowerTulipDuotone,
   PiGraduationCapDuotone,
   PiHouseLineDuotone,
-  PiLeafDuotone,
   PiMapPinAreaDuotone,
   PiParkDuotone,
   PiPhoneCallDuotone,
@@ -39,7 +37,6 @@ import {
   PiPlantDuotone,
   PiTennisBallDuotone,
   PiTrainDuotone,
-  PiTreeEvergreenDuotone,
   PiWhatsappLogoDuotone,
 } from "react-icons/pi";
 import { TbChevronDown, TbMenu2, TbRouteAltRight, TbX } from "react-icons/tb";
@@ -146,15 +143,16 @@ const navItems = [
 ] as const;
 
 const heroHighlights = [
-  "11-acre launch across 2 RERA phases",
-  "Studio to 4 BHK + Staff formats",
-  "5 min to Bhartiya City and 10 min to Manyata",
+  "Premium apartments next to the upcoming Manyata Tech Park Phase 2",
+  "Starts at Rs. 88 L onwards",
+  "Bhartiya City living with resort-style amenities",
 ] as const;
 
 const heroImages = {
-  desktop: "/nikoo/hero/hero-desktop.jpg",
-  tablet: "/nikoo/hero/hero-tablet-original.png",
-  mobile: "/nikoo/hero/hero-mobile-original.png",
+  desktop: "/nikoo/hero/hero-desktop-july.png",
+  tablet: "/nikoo/hero/hero-tablet-july.png",
+  mobileLarge: "/nikoo/hero/hero-mobile-large-july.png",
+  mobile: "/nikoo/hero/hero-mobile-july.png",
 } as const;
 
 const locationMapImages = {
@@ -164,46 +162,58 @@ const locationMapImages = {
 } as const;
 
 const amenityIcons: Record<string, IconType> = {
-  "Quiet Trail": TbRouteAltRight,
-  "Community Garden": PiParkDuotone,
-  "Children's Play Area": PiBabyDuotone,
-  "Meditation Garden": PiBrainDuotone,
-  "Aroma Garden": PiFlowerTulipDuotone,
-  "Sensory Garden": PiLeafDuotone,
-  "Living Canopy": PiTreeEvergreenDuotone,
-  "Tennis Court": PiTennisBallDuotone,
+  Gymnasium: PiBrainDuotone,
+  "45,000 sq ft Clubhouse": PiBuildingsDuotone,
+  "Indoor Games Room": PiTennisBallDuotone,
+  Workspaces: PiHouseLineDuotone,
+  "Jogging & Skating Track": TbRouteAltRight,
+  "Multiple Sports Courts": PiTennisBallDuotone,
+  "Meditation Yoga Deck": PiBrainDuotone,
+  "Landscaped Gardens": PiParkDuotone,
+  "Kids Play Area": PiBabyDuotone,
+  "Party Area": PiFlowerLotusDuotone,
+  "Retail Spaces": PiBuildingsDuotone,
 };
 
 const uspIcons: Record<string, IconType> = {
-  "Township-backed living": PiBuildingsDuotone,
-  "Wide configuration ladder": PiHouseLineDuotone,
-  "Garden-led planning": PiPlantDuotone,
-  "North Bengaluru access": PiMapPinAreaDuotone,
+  "73% Open Space": PiParkDuotone,
+  "Garden Living": PiPlantDuotone,
+  "Prime Tech & Retail Hub": PiBuildingsDuotone,
+  "Seamless Connectivity": PiTrainDuotone,
+  "Premium Architecture": PiHouseLineDuotone,
+  "30+ Luxury Amenities": PiFlowerLotusDuotone,
 };
 
 const locationIcons: Record<string, IconType> = {
-  Landmarks: PiBuildingsDuotone,
-  Education: PiGraduationCapDuotone,
-  Transit: PiTrainDuotone,
-  Airport: PiAirplaneTakeoffDuotone,
+  Schools: PiGraduationCapDuotone,
+  Malls: PiBuildingsDuotone,
+  Hotels: PiHouseLineDuotone,
+  "Tech Parks": PiBuildingsDuotone,
+  Hospitals: PiPhoneCallDuotone,
+  Travel: PiAirplaneTakeoffDuotone,
 };
 
 const uspDesktopIcons = {
-  "Township-backed living": Community,
-  "Wide configuration ladder": HomeAltSlim,
-  "Garden-led planning": Leaf,
-  "North Bengaluru access": MapPin,
+  "73% Open Space": Leaf,
+  "Garden Living": AfricanTree,
+  "Prime Tech & Retail Hub": Community,
+  "Seamless Connectivity": MapPin,
+  "Premium Architecture": HomeAltSlim,
+  "30+ Luxury Amenities": Flower,
 } as const;
 
 const amenityDesktopIcons = {
-  "Quiet Trail": Walking,
-  "Community Garden": Community,
-  "Children's Play Area": Stroller,
-  "Meditation Garden": Brain,
-  "Aroma Garden": Flower,
-  "Sensory Garden": Leaf,
-  "Living Canopy": AfricanTree,
-  "Tennis Court": TennisBallAlt,
+  Gymnasium: Brain,
+  "45,000 sq ft Clubhouse": Community,
+  "Indoor Games Room": TennisBallAlt,
+  Workspaces: HomeAltSlim,
+  "Jogging & Skating Track": Walking,
+  "Multiple Sports Courts": TennisBallAlt,
+  "Meditation Yoga Deck": Brain,
+  "Landscaped Gardens": Leaf,
+  "Kids Play Area": Stroller,
+  "Party Area": Flower,
+  "Retail Spaces": Community,
 } as const;
 
 const actionLabels: Record<LeadAction, string> = {
@@ -922,12 +932,22 @@ export function LandingPage() {
               unoptimized
             />
             <Image
+              src={heroImages.mobileLarge}
+              alt="Nikoo Homes 8 hero banner"
+              width={1057}
+              height={1488}
+              sizes="100vw"
+              className="hidden h-auto w-full sm:block md:hidden"
+              priority
+              unoptimized
+            />
+            <Image
               src={heroImages.tablet}
               alt="Nikoo Homes 8 hero banner"
-              width={1086}
-              height={1448}
+              width={1198}
+              height={1313}
               sizes="100vw"
-              className="hidden h-auto w-full sm:block"
+              className="hidden h-auto w-full md:block"
               priority
               unoptimized
             />
@@ -936,7 +956,7 @@ export function LandingPage() {
           <div className="section-shell lg:hidden">
             <div className="hero-entry px-0 pb-1 pt-5 text-[var(--foreground)]">
               <p className="max-w-[24ch] text-[1.05rem] font-semibold leading-6 text-[var(--foreground)]">
-                Garden residences shaped for the Thanisandra growth corridor.
+                Walk to Work. Live in a Resort.
               </p>
               <div className="mt-4 grid grid-cols-1 gap-3">
                 {heroHighlights.map((item) => (
@@ -968,7 +988,7 @@ export function LandingPage() {
             <div className="grid min-h-[calc(100svh-8rem)] gap-4 pb-6 pt-0 md:min-h-[82svh] md:gap-8 md:pb-10 md:pt-24 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
               <div className="hero-entry text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)] md:max-w-[42rem] lg:pt-2">
                 <p className="max-w-[20ch] text-[1.05rem] font-semibold leading-7 text-[#fff4ee] md:text-[1.3rem] md:leading-8">
-                  Garden residences shaped for the Thanisandra growth corridor.
+                  Walk to Work. Live in a Resort.
                 </p>
                 <div className="mt-6 grid max-w-3xl gap-3 text-sm font-semibold leading-6 text-[#fff4ee] md:grid-cols-3">
                   {heroHighlights.map((item) => (
@@ -982,15 +1002,18 @@ export function LandingPage() {
               <div className="hero-entry hidden w-full rounded-[1.9rem] bg-[var(--surface)] p-4 shadow-[0_28px_80px_rgba(71,8,13,0.18)] md:p-5 lg:ml-auto lg:block lg:max-w-[23rem]">
                 <div className="rounded-[1.3rem] bg-[var(--brand-red)] px-4 py-3 text-[var(--ink-inverse)]">
                   <h2 className="text-[1.15rem] font-semibold leading-tight text-[var(--ink-inverse)]">
-                    Get exact availability and current pricing in one response.
+                    Enquire About the Project
                   </h2>
+                  <p className="mt-2 text-sm leading-5 text-[var(--brand-cream)]">
+                    Share your details below, and our team will get in touch with the complete project details.
+                  </p>
                 </div>
                 <MainLeadForm
                   hiddenBase={hiddenBase}
                   formName="hero"
                   ctaSource="hero-main-form"
                   selectedUnit={selectedUnit}
-                  submitLabel="Enquiry"
+                  submitLabel="Enquire Now"
                   compact
                   onSuccess={showSuccessToast}
                 />
@@ -1004,10 +1027,10 @@ export function LandingPage() {
             <div className="rounded-[2rem] bg-[var(--surface)] p-4 shadow-[0_24px_70px_rgba(71,8,13,0.08)]">
               <div className="rounded-[1.3rem] bg-[var(--surface-alt)] px-4 py-4">
                 <h2 className="display-title text-[1.6rem] leading-[1] tracking-[-0.04em]">
-                  Enquire now
+                  Enquire About the Project
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[var(--foreground-muted)]">
-                  Share your details after the hero and we will continue with pricing, brochure support and callback.
+                  Share your details below, and our team will get in touch with the complete project details.
                 </p>
               </div>
               <MainLeadForm
@@ -1015,7 +1038,7 @@ export function LandingPage() {
                 formName="mobile-hero"
                 ctaSource="mobile-hero-main-form"
                 selectedUnit={selectedUnit}
-                submitLabel="Enquiry"
+                submitLabel="Enquire Now"
                 onSuccess={showSuccessToast}
               />
             </div>
@@ -1027,7 +1050,7 @@ export function LandingPage() {
             <SectionHeader
               eyebrow="Why choose Nikoo 8"
               title="Why Choose Nikoo 8"
-              body="A cleaner comparison flow with alternating points, clearer spacing and better visual rhythm on mobile and desktop."
+              body="We do not just build apartments. We create spaces where life thrives, blending expansive green landscapes, seamless city connectivity and premium design."
             />
 
             <div className="relative mt-8 md:hidden">
@@ -1134,14 +1157,14 @@ export function LandingPage() {
                 <div className="rounded-[1.6rem] bg-[var(--surface-alt)] p-4 md:p-5">
                   <div className="hidden md:block">
                     <h3 className="display-title text-[1.45rem] leading-[1] tracking-[-0.04em]">
-                      Ask for this plan
+                      Download Floor Plan & Brochure
                     </h3>
                     <MainLeadForm
                       hiddenBase={hiddenBase}
                       formName="floorplans"
                       ctaSource="floorplan-basic-form"
                       selectedUnit={selectedUnit}
-                      submitLabel="Enquiry"
+                      submitLabel="Get Brochure"
                       compact
                       showUnitField={false}
                     />
@@ -1180,14 +1203,14 @@ export function LandingPage() {
                     openLeadModal(
                       "floor_plan",
                       "floorplan-enquire",
-                      `Request ${selectedUnit.label} floor plan`,
-                      "Share your details and we will send the selected apartment plan with the current availability guidance.",
+                      `Download ${selectedUnit.label} Floor Plan & Brochure`,
+                      "Share your details and we will send the selected apartment plan and brochure.",
                       selectedUnit,
                     )
                   }
                 >
                   <PiArrowRightDuotone className="text-xl" />
-                  Get Selected Floor Plan
+                  Download Floor Plan & Brochure
                 </Button>
               </div>
             </div>
@@ -1198,8 +1221,8 @@ export function LandingPage() {
           <div className="section-shell py-12 md:py-16">
             <SectionHeader
               eyebrow="Amenities"
-              title="Amenities"
-              body="A neater two-column read with larger sketch-style icons and stronger labels."
+              title="30+ Luxury Amenities"
+              body="A grand clubhouse, sports courts, workspaces and landscaped leisure zones support fitness, community and everyday convenience."
               align="center"
             />
 
@@ -1268,8 +1291,8 @@ export function LandingPage() {
                 <div>
                   <SectionHeader
                     eyebrow="Location"
-                    title="Thanisandra connectivity with the actual map and nearby anchors in one place."
-                    body="Keep the live map on the left and compare surrounding destinations by category on the right."
+                    title="Connectivity to key schools, tech parks, malls, hospitals and travel hubs."
+                    body="Distances are based on the supplied Nikoo 8 amenities and connectivity sheet."
                   />
                   <div className="mt-6 overflow-hidden rounded-[1.7rem] shadow-[0_18px_48px_rgba(71,8,13,0.1)]">
                     <div className="relative h-[22rem] bg-[var(--surface-alt)]">
@@ -1371,10 +1394,10 @@ export function LandingPage() {
               <div className="relative pl-4">
                 <span className="absolute left-0 top-1 h-24 w-1 rounded-full bg-[var(--brand-red)]" />
                 <h2 className="display-title max-w-[13ch] text-[2rem] leading-[0.96] tracking-[-0.05em] md:text-[3rem]">
-                  Request the right apartment update without a long form.
+                  Schedule project site visit
                 </h2>
                 <p className="mt-3 max-w-lg text-sm leading-6 text-[var(--foreground-muted)] md:text-base md:leading-7">
-                  Share your preferred apartment option once and we will route the brochure, price guidance or visit support through the right channel.
+                  Please provide your details so our team can coordinate and schedule your project site visit.
                 </p>
               </div>
 
@@ -1393,7 +1416,7 @@ export function LandingPage() {
                   formName="final"
                   ctaSource="final-main-form"
                   selectedUnit={selectedUnit}
-                  submitLabel="Enquiry"
+                  submitLabel="Schedule Site Visit"
                   onSuccess={redirectToThankYou}
                 />
               </div>
@@ -1432,30 +1455,31 @@ export function LandingPage() {
       </footer>
 
       <div className="mobile-sticky-actions fixed inset-x-0 bottom-0 z-50 lg:hidden">
-        <div className="grid min-h-16 grid-cols-3 overflow-hidden border-t border-[rgba(143,23,32,0.18)] bg-white/96 shadow-[0_-12px_34px_rgba(71,8,13,0.12)] backdrop-blur-xl">
+        <div className="grid min-h-16 grid-cols-2 overflow-hidden border-t border-[rgba(143,23,32,0.18)] bg-white/96 shadow-[0_-12px_34px_rgba(71,8,13,0.12)] backdrop-blur-xl">
           <button
             type="button"
-            aria-label="Enquiry"
+            aria-label="Enquire Now"
             onClick={() => scrollToSection("main-enquiry-form", "mobile-sticky-enquiry")}
-            className="flex min-h-16 items-center justify-center border-r border-[rgba(143,23,32,0.16)] text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
+            className="flex min-h-16 items-center justify-center gap-2 border-r border-[rgba(143,23,32,0.16)] px-3 text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
           >
-            <PiEnvelopeSimpleDuotone className="text-[1.85rem]" />
+            <PiEnvelopeSimpleDuotone className="shrink-0 text-[1.55rem]" />
+            <span className="text-sm font-extrabold uppercase tracking-[0.08em]">Enquire Now</span>
           </button>
           <button
             type="button"
-            aria-label="Floor plan"
-            onClick={() => scrollToSection("floorplans", "mobile-sticky-floorplan")}
-            className="flex min-h-16 items-center justify-center border-r border-[rgba(143,23,32,0.16)] text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
+            aria-label="Get Brochure"
+            onClick={() =>
+              openLeadModal(
+                "brochure",
+                "mobile-sticky-brochure",
+                "Get Brochure",
+                "Share your details to receive the Nikoo Homes 8 brochure.",
+              )
+            }
+            className="flex min-h-16 items-center justify-center gap-2 px-3 text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
           >
-            <PiHouseLineDuotone className="text-[1.85rem]" />
-          </button>
-          <button
-            type="button"
-            aria-label="Site visit"
-            onClick={() => scrollToSection("final-enquiry", "mobile-sticky-sitevisit")}
-            className="flex min-h-16 items-center justify-center text-[var(--brand-red)] transition active:bg-[var(--surface-alt)]"
-          >
-            <PiCalendarDotsDuotone className="text-[1.85rem]" />
+            <PiDownloadSimpleDuotone className="shrink-0 text-[1.55rem]" />
+            <span className="text-sm font-extrabold uppercase tracking-[0.08em]">Get Brochure</span>
           </button>
         </div>
       </div>

@@ -1,8 +1,8 @@
 export const projectFacts = {
   name: "Nikoo Homes 8",
-  publicTitle: "Nikoo Homes 8 at Bhartiya Garden Enclave",
+  publicTitle: "Bhartiya City Nikoo Homes 8",
   developer: "Bhartiya Urban Pvt. Ltd.",
-  locationShort: "Thanisandra Main Road, North Bengaluru",
+  locationShort: "Bellahalli, Bengaluru",
   contactNumber: "+91 90081 77888",
   contactHref: "tel:+919008177888",
   emailLabel: "Email Enquiry",
@@ -19,7 +19,7 @@ export const projectFacts = {
   mapUrl:
     "https://www.google.com/maps/search/Nikoo+Homes+8+Thanisandra+Main+Road+Bengaluru",
   images: {
-    hero: "/nikoo/images/banner-image.webp",
+    hero: "/nikoo/hero/hero-desktop-july.png",
     elevation: "/nikoo/images/elevation.webp",
     township: "/nikoo/images/township.png",
     masterPlan: "/nikoo/images/masterplan.jpg",
@@ -127,80 +127,137 @@ export const units = [
 
 export const uspHighlights = [
   {
-    title: "Township-backed living",
-    text: "Nikoo Homes 8 sits inside Bhartiya Garden Enclave, keeping a larger lifestyle ecosystem close to home.",
+    title: "73% Open Space",
+    text: "Spread across an 11+ acre development, giving you room to breathe, play and explore.",
   },
   {
-    title: "Wide configuration ladder",
-    text: "From compact studios to 4 BHK plus staff formats, the range covers first homes, upgrades and premium layouts.",
+    title: "Garden Living",
+    text: "Immersive green zones include Wildflower, Sensory, Meditation and Community Gardens.",
   },
   {
-    title: "Garden-led planning",
-    text: "Landscape experiences, shaded walks and themed gardens keep the project identity clear instead of generic.",
+    title: "Prime Tech & Retail Hub",
+    text: "Minutes from Manyata Tech Park, BCIT Tech Park and Bhartiya Mall of Bengaluru.",
   },
   {
-    title: "North Bengaluru access",
-    text: "Thanisandra Main Road, Bhartiya City, Manyata Tech Park and airport-side movement stay practically connected.",
+    title: "Seamless Connectivity",
+    text: "The upcoming Blue Line Metro station is close to the project, helping reduce everyday traffic friction.",
+  },
+  {
+    title: "Premium Architecture",
+    text: "Thoughtfully designed homes with elegant Italian-style kitchens and signature wave windows.",
+  },
+  {
+    title: "30+ Luxury Amenities",
+    text: "A grand luxury clubhouse and expansive sports complex support fitness, leisure and community living.",
   },
 ] as const;
 
 export const amenityHighlights = [
   {
-    label: "Quiet Trail",
-    text: "A calmer walking spine for everyday movement.",
+    label: "Gymnasium",
+    text: "Dedicated fitness space for daily wellness routines.",
   },
   {
-    label: "Community Garden",
-    text: "A shared green pocket for neighbourly pause points.",
+    label: "45,000 sq ft Clubhouse",
+    text: "A large clubhouse planned for leisure, fitness and community use.",
   },
   {
-    label: "Children's Play Area",
-    text: "Dedicated family-friendly outdoor activity space.",
+    label: "Indoor Games Room",
+    text: "Indoor recreation space for all-weather downtime.",
   },
   {
-    label: "Meditation Garden",
-    text: "A quieter garden edge for reset and reflection.",
+    label: "Workspaces",
+    text: "Convenient work zones for focused and flexible routines.",
   },
   {
-    label: "Aroma Garden",
-    text: "Fragrance-led planting that sharpens the landscape identity.",
+    label: "Jogging & Skating Track",
+    text: "Active outdoor tracks for movement across the community.",
   },
   {
-    label: "Sensory Garden",
-    text: "A softer mix of texture, planting and movement cues.",
+    label: "Multiple Sports Courts",
+    text: "Sports courts planned for active recreation and practice.",
   },
   {
-    label: "Living Canopy",
-    text: "A shaded green gesture that anchors the outdoor experience.",
+    label: "Meditation Yoga Deck",
+    text: "A calmer deck for yoga, meditation and reset.",
   },
   {
-    label: "Tennis Court",
-    text: "An active recreation layer within the community plan.",
+    label: "Landscaped Gardens",
+    text: "Green outdoor pockets woven into everyday community life.",
+  },
+  {
+    label: "Kids Play Area",
+    text: "Dedicated play space for younger residents.",
+  },
+  {
+    label: "Party Area",
+    text: "A social zone for celebrations and community gatherings.",
+  },
+  {
+    label: "Retail Spaces",
+    text: "Convenient retail spaces within the development ecosystem.",
   },
 ] as const;
 
 export const locationClusters = [
   {
-    label: "Landmarks",
+    label: "Schools",
     items: [
-      { name: "Bhartiya City", time: "5 min" },
-      { name: "Manyata Tech Park", time: "10 min" },
+      { name: "Chaman Bhartiya School", time: "0.5 km" },
+      { name: "New Horizon International School", time: "1.4 km" },
+      { name: "National Public School, North", time: "5.6 km" },
+      { name: "VIBGYOR Jakkur", time: "3.9 km" },
+      { name: "DPS Bangalore North", time: "3.8 km" },
     ],
   },
   {
-    label: "Education",
-    items: [{ name: "Chaman Bhartiya School", time: "5 min" }],
-  },
-  {
-    label: "Transit",
+    label: "Malls",
     items: [
-      { name: "Nagawara Metro Station", time: "15 min" },
-      { name: "Yelahanka Junction", time: "18 min" },
+      { name: "Bhartiya Mall of Bengaluru", time: "0.2 km" },
+      { name: "Decathlon", time: "9 km" },
+      { name: "Elements Mall", time: "4 km" },
+      { name: "D Mart Hennur", time: "5 km" },
+      { name: "Phoenix Mall of Asia", time: "6 km" },
     ],
   },
   {
-    label: "Airport",
-    items: [{ name: "Kempegowda International Airport", time: "25 min" }],
+    label: "Hotels",
+    items: [
+      { name: "The Leela Bhartiya City", time: "0.3 km" },
+      { name: "Hilton, Embassy Manyata Business Park", time: "5.4 km" },
+      { name: "Courtyard by Marriott", time: "6 km" },
+      { name: "Four Seasons Hotel", time: "9.7 km" },
+    ],
+  },
+  {
+    label: "Tech Parks",
+    items: [
+      { name: "BCIT, Bhartiya City", time: "0.5 km" },
+      { name: "Manyata Tech Park", time: "5 km" },
+      { name: "L&T Tech Park", time: "6 km" },
+      { name: "Brigade Opus", time: "6.4 km" },
+      { name: "Brigade Magnum", time: "6.3 km" },
+    ],
+  },
+  {
+    label: "Hospitals",
+    items: [
+      { name: "REGAL Kidney and Multi Specialty Hospital", time: "1.1 km" },
+      { name: "Prolife Multi Speciality Hospital", time: "6 km" },
+      { name: "Cytecare Cancer Hospitals", time: "5.5 km" },
+      { name: "Motherhood Hospital", time: "6.2 km" },
+      { name: "Aster CMI Hospital", time: "6.7 km" },
+    ],
+  },
+  {
+    label: "Travel",
+    items: [
+      { name: "Thanisandra Main Road", time: "3.4 km" },
+      { name: "Nagawara Metro Station", time: "6.5 km" },
+      { name: "Yelahanka Junction", time: "6.3 km" },
+      { name: "Kempegowda International Airport", time: "14 km" },
+      { name: "Central Bengaluru District", time: "12 km" },
+    ],
   },
 ] as const;
 
