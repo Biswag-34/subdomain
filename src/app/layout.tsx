@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import Script from "next/script";
 
+import { absoluteUrl, siteDescription, siteKeywords, siteName, siteUrl } from "@/lib/site";
+
 import "./globals.css";
 
 const bodyFont = Outfit({
@@ -16,22 +18,54 @@ const displayFont = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"),
-  title:
-    "Nikoo Homes 8 Bellahalli | Price Sheet, Floor Plans, RERA, Brochure & Site Visit",
-  description:
-    "Explore Nikoo Homes 8 at Bhartiya Garden Enclave in Bellahalli near Thanisandra Main Road. Request price details, floor plans, brochure and site visit support.",
+  metadataBase: new URL(siteUrl),
+  applicationName: siteName,
+  title: {
+    default: "Nikoo Homes 8 Bellahalli | Price, Brochure, Floor Plans & Site Visit",
+    template: "%s | Nikoo Homes 8 Bellahalli",
+  },
+  description: siteDescription,
+  keywords: siteKeywords,
   alternates: {
-    canonical: "https://example.com/",
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
   openGraph: {
-    title:
-      "Nikoo Homes 8 Bellahalli | Price Sheet, Floor Plans, RERA, Brochure & Site Visit",
-    description:
-      "Explore Nikoo Homes 8 at Bhartiya Garden Enclave in Bellahalli near Thanisandra Main Road.",
-    images: ["/nikoo/hero/hero-desktop-july.png"],
+    title: "Nikoo Homes 8 Bellahalli | Price, Brochure, Floor Plans & Site Visit",
+    description: siteDescription,
+    images: [
+      {
+        url: absoluteUrl("/nikoo/hero/goal-hero-1.png"),
+        width: 1672,
+        height: 941,
+        alt: "Nikoo Homes 8 Bellahalli residential towers and landscaped amenities",
+      },
+    ],
+    locale: "en_IN",
+    siteName,
     type: "website",
-    url: "https://example.com/",
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nikoo Homes 8 Bellahalli | Price, Brochure, Floor Plans & Site Visit",
+    description: siteDescription,
+    images: [absoluteUrl("/nikoo/hero/goal-hero-1.png")],
+  },
+  category: "real estate",
+  other: {
+    "geo.region": "IN-KA",
+    "geo.placename": "Bellahalli, Bengaluru",
   },
 };
 

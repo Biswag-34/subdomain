@@ -32,12 +32,9 @@ import {
   PiHouseLineDuotone,
   PiMapPinAreaDuotone,
   PiParkDuotone,
-  PiPhoneCallDuotone,
-  PiPhoneDuotone,
   PiPlantDuotone,
   PiTennisBallDuotone,
   PiTrainDuotone,
-  PiWhatsappLogoDuotone,
 } from "react-icons/pi";
 import { TbChevronDown, TbMenu2, TbRouteAltRight, TbX } from "react-icons/tb";
 import { useForm } from "react-hook-form";
@@ -45,7 +42,6 @@ import { z } from "zod";
 
 import {
   amenityHighlights,
-  getWhatsAppUrl,
   locationClusters,
   micrositeDisclaimer,
   projectFacts,
@@ -65,7 +61,7 @@ import {
 gsap.registerPlugin(useGSAP);
 
 type LeadAction = "price_sheet" | "brochure" | "floor_plan" | "site_visit";
-type ModalKind = LeadAction | "instant_call";
+type ModalKind = LeadAction;
 type Unit = (typeof units)[number];
 
 type HiddenLeadFields = {
@@ -95,21 +91,13 @@ type LeadModal = {
 
 const mainLeadFormSchema = z.object({
   lead_name: z.string().trim().min(2, "Please enter your name."),
-  lead_phone: z
-    .string()
-    .trim()
-    .min(7, "Please enter a valid phone number.")
-    .regex(/^[0-9+\-\s()]+$/, "Use numbers only."),
+  email: z.string().trim().email("Please enter a valid email address."),
   lead_unit_type: z.string().min(1, "Please choose an apartment option."),
 });
 
 const secondaryLeadFormSchema = z.object({
   lead_name: z.string().trim().min(2, "Please enter your name."),
-  lead_phone: z
-    .string()
-    .trim()
-    .min(7, "Please enter a valid phone number.")
-    .regex(/^[0-9+\-\s()]+$/, "Use numbers only."),
+  email: z.string().trim().email("Please enter a valid email address."),
 });
 
 type MainLeadFormValues = z.infer<typeof mainLeadFormSchema>;
@@ -149,10 +137,10 @@ const heroHighlights = [
 ] as const;
 
 const heroImages = {
-  desktop: "/nikoo/hero/hero-desktop-july.png",
-  tablet: "/nikoo/hero/hero-tablet-july.png",
-  mobileLarge: "/nikoo/hero/hero-mobile-large-july.png",
-  mobile: "/nikoo/hero/hero-mobile-july.png",
+  desktop: "/nikoo/hero/desktop-wide-upload.png",
+  tablet: "/nikoo/hero/goal-hero-2.png",
+  mobileLarge: "/nikoo/hero/goal-hero-3.png",
+  mobile: "/nikoo/hero/goal-hero-4.png",
 } as const;
 
 const locationMapImages = {
@@ -189,7 +177,7 @@ const locationIcons: Record<string, IconType> = {
   Malls: PiBuildingsDuotone,
   Hotels: PiHouseLineDuotone,
   "Tech Parks": PiBuildingsDuotone,
-  Hospitals: PiPhoneCallDuotone,
+  Hospitals: PiBuildingsDuotone,
   Travel: PiAirplaneTakeoffDuotone,
 };
 
@@ -222,17 +210,6 @@ const actionLabels: Record<LeadAction, string> = {
   floor_plan: "Get Floor Plan",
   site_visit: "Book Site Visit",
 };
-
-function buildWhatsAppMessage(action: LeadAction, unitLabel: string) {
-  const intentText: Record<LeadAction, string> = {
-    price_sheet: "latest price details",
-    brochure: "project brochure",
-    floor_plan: "selected floor plan",
-    site_visit: "site visit appointment",
-  };
-
-  return `I am interested in ${projectFacts.publicTitle}. Please share the ${intentText[action]} for ${unitLabel}.`;
-}
 
 async function submitLead(payload: Record<string, unknown>) {
   const response = await fetch("/api/leads", {
@@ -305,7 +282,7 @@ function MainLeadForm({
     resolver: zodResolver(mainLeadFormSchema),
     defaultValues: {
       lead_name: "",
-      lead_phone: "",
+      email: "",
       lead_unit_type: selectedUnit.label,
     },
   });
@@ -344,10 +321,9 @@ function MainLeadForm({
         timestamp: new Date().toISOString(),
         lead_action: "price_sheet",
         lead_name: values.lead_name,
-        lead_phone: values.lead_phone,
+        email: values.email,
         lead_unit_type: values.lead_unit_type,
         name: values.lead_name,
-        phone: values.lead_phone,
         interestedIn: values.lead_unit_type,
         preferredAction: "price_sheet",
         source: ctaSource,
@@ -361,7 +337,7 @@ function MainLeadForm({
       setStatus("success");
       reset({
         lead_name: "",
-        lead_phone: "",
+        email: "",
         lead_unit_type: selectedUnit.label,
       });
       onSuccess?.(values);
@@ -385,17 +361,18 @@ function MainLeadForm({
           {errors.lead_name ? <p className="form-error">{errors.lead_name.message}</p> : null}
         </div>
         <div>
-          <label className="form-label text-[var(--foreground)]" htmlFor={`${formName}-phone`}>
-            Number
+          <label className="form-label text-[var(--foreground)]" htmlFor={`${formName}-email`}>
+            Email
           </label>
           <input
-            id={`${formName}-phone`}
+            id={`${formName}-email`}
             className="compact-input"
-            autoComplete="tel"
-            inputMode="numeric"
-            {...register("lead_phone")}
+            autoComplete="email"
+            inputMode="email"
+            type="email"
+            {...register("email")}
           />
-          {errors.lead_phone ? <p className="form-error">{errors.lead_phone.message}</p> : null}
+          {errors.email ? <p className="form-error">{errors.email.message}</p> : null}
         </div>
       </div>
 
@@ -432,7 +409,7 @@ function MainLeadForm({
 
       {!compact ? (
         <p className="text-[0.72rem] leading-5 text-[var(--foreground-muted)]">
-          Your details are used only to share project information, brochure access and callback support.
+          Your details are used only to share project information and brochure access.
         </p>
       ) : null}
 
@@ -444,11 +421,7 @@ function MainLeadForm({
 
       {status === "error" ? (
         <p className="text-sm text-[var(--foreground-muted)]">
-          We could not submit right now. Please call{" "}
-          <a className="font-semibold text-[var(--brand-red)]" href={projectFacts.contactHref}>
-            {projectFacts.contactNumber}
-          </a>
-          .
+          We could not submit right now. Please try again in a moment.
         </p>
       ) : null}
     </form>
@@ -480,14 +453,14 @@ function SecondaryLeadForm({
     resolver: zodResolver(secondaryLeadFormSchema),
     defaultValues: {
       lead_name: "",
-      lead_phone: "",
+      email: "",
     },
   });
 
   useEffect(() => {
     reset({
       lead_name: "",
-      lead_phone: "",
+      email: "",
     });
   }, [reset, selectedUnit.slug]);
 
@@ -502,10 +475,9 @@ function SecondaryLeadForm({
         timestamp: new Date().toISOString(),
         lead_action: action,
         lead_name: values.lead_name,
-        lead_phone: values.lead_phone,
+        email: values.email,
         lead_unit_type: selectedUnit.label,
         name: values.lead_name,
-        phone: values.lead_phone,
         interestedIn: selectedUnit.label,
         preferredAction: action,
         source: ctaSource,
@@ -519,7 +491,7 @@ function SecondaryLeadForm({
       setStatus("success");
       reset({
         lead_name: "",
-        lead_phone: "",
+        email: "",
       });
     } catch {
       setStatus("error");
@@ -527,7 +499,7 @@ function SecondaryLeadForm({
   };
 
   return (
-    <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="grid gap-3" onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label className="form-label" htmlFor={`${formName}-name`}>
           Name
@@ -536,28 +508,26 @@ function SecondaryLeadForm({
         {errors.lead_name ? <p className="form-error">{errors.lead_name.message}</p> : null}
       </div>
       <div>
-        <label className="form-label" htmlFor={`${formName}-phone`}>
-          Number
+        <label className="form-label" htmlFor={`${formName}-email`}>
+          Email
         </label>
         <input
-          id={`${formName}-phone`}
+          id={`${formName}-email`}
           className="compact-input"
-          autoComplete="tel"
-          inputMode="numeric"
-          {...register("lead_phone")}
+          autoComplete="email"
+          inputMode="email"
+          type="email"
+          {...register("email")}
         />
-        {errors.lead_phone ? <p className="form-error">{errors.lead_phone.message}</p> : null}
+        {errors.email ? <p className="form-error">{errors.email.message}</p> : null}
       </div>
       <Button
         type="submit"
-        className="cta-button-red min-h-12 w-full"
+        className="cta-button-red min-h-11 w-full"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Sending..." : submitLabel}
       </Button>
-      <p className="text-[0.72rem] leading-5 text-[var(--foreground-muted)]">
-        Your details stay limited to this project enquiry and callback coordination.
-      </p>
       {status === "success" ? (
         <p className="text-sm font-semibold text-[var(--brand-red)]">
           Thank you. We have your request and will connect shortly.
@@ -565,11 +535,7 @@ function SecondaryLeadForm({
       ) : null}
       {status === "error" ? (
         <p className="text-sm text-[var(--foreground-muted)]">
-          Submission failed just now. Please call{" "}
-          <a className="font-semibold text-[var(--brand-red)]" href={projectFacts.contactHref}>
-            {projectFacts.contactNumber}
-          </a>
-          .
+          Submission failed just now. Please try again in a moment.
         </p>
       ) : null}
     </form>
@@ -731,8 +697,7 @@ export function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  const modalLeadAction: LeadAction =
-    leadModal?.kind && leadModal.kind !== "instant_call" ? leadModal.kind : "price_sheet";
+  const modalLeadAction: LeadAction = leadModal?.kind ?? "price_sheet";
 
   const openLeadModal = (
     kind: ModalKind,
@@ -793,14 +758,6 @@ export function LandingPage() {
       top: Math.max(nextTop, 0),
       behavior: "smooth",
     });
-  };
-
-  const handleCallClick = (source: string) => {
-    trackEvent("cta_call_click", { cta_source: source, unit_type: selectedUnit.label });
-  };
-
-  const handleWhatsAppClick = (source: string) => {
-    trackEvent("cta_whatsapp_click", { cta_source: source, unit_type: selectedUnit.label });
   };
 
   return (
@@ -934,8 +891,8 @@ export function LandingPage() {
             <Image
               src={heroImages.mobileLarge}
               alt="Nikoo Homes 8 hero banner"
-              width={1057}
-              height={1488}
+              width={941}
+              height={1672}
               sizes="100vw"
               className="hidden h-auto w-full sm:block md:hidden"
               priority
@@ -944,32 +901,13 @@ export function LandingPage() {
             <Image
               src={heroImages.tablet}
               alt="Nikoo Homes 8 hero banner"
-              width={1198}
-              height={1313}
+              width={1086}
+              height={1448}
               sizes="100vw"
               className="hidden h-auto w-full md:block"
               priority
               unoptimized
             />
-          </div>
-
-          <div className="section-shell lg:hidden">
-            <div className="hero-entry px-0 pb-1 pt-5 text-[var(--foreground)]">
-              <p className="max-w-[24ch] text-[1.05rem] font-semibold leading-6 text-[var(--foreground)]">
-                Walk to Work. Live in a Resort.
-              </p>
-              <div className="mt-4 grid grid-cols-1 gap-3">
-                {heroHighlights.map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-start gap-3 text-sm font-semibold leading-6 text-[var(--foreground)]"
-                  >
-                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-[var(--brand-red)]" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="absolute inset-0 hidden lg:block">
@@ -986,14 +924,23 @@ export function LandingPage() {
 
           <div className="section-shell relative hidden lg:block">
             <div className="grid min-h-[calc(100svh-8rem)] gap-4 pb-6 pt-0 md:min-h-[82svh] md:gap-8 md:pb-10 md:pt-24 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-              <div className="hero-entry text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)] md:max-w-[42rem] lg:pt-2">
-                <p className="max-w-[20ch] text-[1.05rem] font-semibold leading-7 text-[#fff4ee] md:text-[1.3rem] md:leading-8">
-                  Walk to Work. Live in a Resort.
+              <div className="hero-entry text-white drop-shadow-[0_14px_34px_rgba(0,0,0,0.52)] md:max-w-[42rem] lg:pt-2">
+                <p className="font-[family-name:var(--font-display)] text-[clamp(2.8rem,5.4vw,5.9rem)] font-semibold leading-[0.92] tracking-normal text-white">
+                  Walk to Work.
                 </p>
-                <div className="mt-6 grid max-w-3xl gap-3 text-sm font-semibold leading-6 text-[#fff4ee] md:grid-cols-3">
-                  {heroHighlights.map((item) => (
-                    <div key={item} className="rounded-[1.35rem] border border-white/22 bg-white/18 px-4 py-4 backdrop-blur-sm">
-                      {item}
+                <p className="mt-2 font-[family-name:var(--font-display)] text-[clamp(2.35rem,4.8vw,5.1rem)] font-semibold leading-[0.92] tracking-normal text-[#fff2ed]">
+                  Live in a Resort.
+                </p>
+                <div className="mt-8 flex max-w-[36rem] flex-col gap-4 text-[#fff5ef]">
+                  {heroHighlights.map((item, index) => (
+                    <div key={item} className="flex items-start gap-4">
+                      <span className="pt-0.5 text-[0.72rem] font-black uppercase text-[#ff665b]">
+                        0{index + 1}
+                      </span>
+                      <span className="mt-3 h-px w-12 shrink-0 bg-[#ff665b]/75" />
+                      <p className="max-w-[32rem] text-[1.02rem] font-semibold leading-7 text-[#fff5ef]">
+                        {item}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -1487,21 +1434,6 @@ export function LandingPage() {
       <div className="fixed bottom-5 right-5 z-50 hidden flex-col gap-3 lg:flex">
         <button
           type="button"
-          aria-label="Instant connect"
-          onClick={() =>
-            openLeadModal(
-              "instant_call",
-              "desktop-sticky-call",
-              "Instant connect",
-              "Choose direct call or WhatsApp, or leave your details for a fast callback.",
-            )
-          }
-          className="flex size-14 items-center justify-center rounded-full bg-[rgba(255,255,255,0.94)] text-[var(--cta-green)] shadow-[0_18px_40px_rgba(30,120,68,0.16)]"
-        >
-          <PiPhoneCallDuotone className="text-[1.7rem]" />
-        </button>
-        <button
-          type="button"
           aria-label="Request brochure"
           onClick={() =>
             openLeadModal(
@@ -1608,30 +1540,7 @@ export function LandingPage() {
                 <DialogDescription>{leadModal.description}</DialogDescription>
               </DialogHeader>
 
-              {leadModal.kind === "instant_call" ? (
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <a
-                    href={projectFacts.contactHref}
-                    onClick={() => handleCallClick(`${leadModal.ctaSource}-call`)}
-                    className="cta-button-red flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold"
-                  >
-                    <PiPhoneDuotone className="text-xl" />
-                    Call now
-                  </a>
-                  <a
-                    href={getWhatsAppUrl(buildWhatsAppMessage("price_sheet", leadModal.unit.label))}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => handleWhatsAppClick(`${leadModal.ctaSource}-whatsapp`)}
-                    className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--cta-green)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--cta-green-strong)]"
-                  >
-                    <PiWhatsappLogoDuotone className="text-xl" />
-                    WhatsApp
-                  </a>
-                </div>
-              ) : null}
-
-              <div className="mt-4 rounded-[1.25rem] bg-[var(--surface)] p-4 md:p-5">
+              <div className="mt-3 rounded-[1.15rem] bg-[var(--surface)] p-3 md:p-4">
                 <SecondaryLeadForm
                   hiddenBase={hiddenBase}
                   formName="modal"
@@ -1641,13 +1550,6 @@ export function LandingPage() {
                   submitLabel={actionLabels[modalLeadAction]}
                 />
               </div>
-
-              <p className="mt-4 text-sm font-semibold text-[var(--foreground)]">
-                Call us directly:{" "}
-                <a className="text-[var(--brand-red)]" href={projectFacts.contactHref}>
-                  {projectFacts.contactNumber}
-                </a>
-              </p>
             </>
           ) : null}
         </DialogContent>

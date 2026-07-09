@@ -1,0 +1,49 @@
+Nikoo Homes 8 landing page SEO/SEM and implementation work log
+Date: 2026-07-09
+
+Hero banner work
+- Removed active references to the previous hero banner set.
+- Copied the four user-provided goal images into public/nikoo/hero/:
+  - goal-hero-1.png: desktop/wide hero.
+  - goal-hero-2.png: tablet hero.
+  - goal-hero-3.png: larger mobile hero.
+  - goal-hero-4.png: small mobile hero.
+- Updated src/components/landing-page.tsx to load these four assets by breakpoint.
+- Updated projectFacts.images.hero, OpenGraph image, Twitter image, and thank-you background to use the new goal hero asset.
+
+Phone-number removal
+- Removed the project phone number and tel link fields from src/data/nikoo-homes-8.ts.
+- Removed direct call and WhatsApp actions from the landing page popup flow.
+- Removed desktop instant-call floating CTA.
+- Removed call number fallback text from form error states.
+- Removed phone number from JSON-LD schema.
+- Removed the call button from the thank-you page.
+- Replaced visitor number fields with email fields in lead forms and removed legacy phone payload fields from the lead API.
+
+Form and popup fit work
+- Removed internal popup scrolling from DialogContent.
+- Reduced modal maximum width, padding, title size, close button size, and form spacing.
+- Removed non-critical helper text from the popup form to keep it within the viewport.
+- Kept lead forms focused on name, email, and apartment preference where applicable.
+
+SEO and crawlability work
+- Replaced example.com metadata with configurable site URL support via NEXT_PUBLIC_SITE_URL in src/lib/site.ts.
+- Added SEO title, description, keyword set, canonical URL, robots directives, OpenGraph, Twitter Card, geo metadata, and large image preview settings in src/app/layout.tsx.
+- Added src/app/sitemap.ts to generate /sitemap.xml for the primary landing page.
+- Added src/app/robots.ts to generate /robots.txt, allow crawlable public pages, disallow /api/, and point crawlers to the sitemap.
+- Marked /thank-you as noindex/nofollow so conversion pages do not compete with the landing page in search results.
+- Expanded structured data in src/lib/schema.ts:
+  - BreadcrumbList
+  - WebPage
+  - Residence/project schema
+  - OfferCatalog for apartment options
+  - FAQPage
+  - WebSite disclosure schema
+- Removed telephone from schema to match the no-phone-number requirement.
+
+SEM readiness
+- Existing hidden lead metadata continues to capture UTM parameters, click IDs, landing page URL, referrer, CTA source, form name, device type, and timestamp for campaign attribution.
+- Metadata and form CTAs now align with lead-generation terms such as price, brochure, floor plans, site visit, Bellahalli, Bhartiya City, Manyata Tech Park, and North Bengaluru apartments.
+
+Deployment note
+- Before production launch, set NEXT_PUBLIC_SITE_URL to the final live domain so canonical URLs, OpenGraph URLs, robots host, and sitemap URLs exactly match the deployed website.

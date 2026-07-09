@@ -1,19 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PiArrowRightDuotone, PiHouseLineDuotone, PiPhoneCallDuotone } from "react-icons/pi";
-
-import { projectFacts } from "@/data/nikoo-homes-8";
+import { PiArrowRightDuotone, PiHouseLineDuotone } from "react-icons/pi";
 
 export const metadata = {
   title: "Thank You | Nikoo Homes 8",
   description: "Thank you for enquiring about Nikoo Homes 8.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ThankYouPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[var(--brand-red-deep)] text-white">
       <Image
-        src="/nikoo/hero/hero-desktop-july.png"
+        src="/nikoo/hero/goal-hero-1.png"
         alt="Nikoo Homes 8 township view"
         fill
         sizes="100vw"
@@ -34,17 +36,10 @@ export default function ThankYouPage() {
             Your enquiry has been received. The project team will connect with the current apartment details shortly.
           </p>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <a
-              href={projectFacts.contactHref}
-              className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-[var(--brand-red)] transition hover:bg-[#fff2ef]"
-            >
-              <PiPhoneCallDuotone className="text-xl" />
-              Call now
-            </a>
+          <div className="mt-8 flex justify-center">
             <Link
               href="/"
-              className="cta-button-red flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm"
+              className="cta-button-red flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm"
             >
               Back to site
               <PiArrowRightDuotone className="text-xl" />

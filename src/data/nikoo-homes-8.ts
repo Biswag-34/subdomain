@@ -3,8 +3,6 @@ export const projectFacts = {
   publicTitle: "Bhartiya City Nikoo Homes 8",
   developer: "Bhartiya Urban Pvt. Ltd.",
   locationShort: "Bellahalli, Bengaluru",
-  contactNumber: "+91 90081 77888",
-  contactHref: "tel:+919008177888",
   emailLabel: "Email Enquiry",
   emailHref: "#final-enquiry",
   socials: {
@@ -19,7 +17,7 @@ export const projectFacts = {
   mapUrl:
     "https://www.google.com/maps/search/Nikoo+Homes+8+Thanisandra+Main+Road+Bengaluru",
   images: {
-    hero: "/nikoo/hero/hero-desktop-july.png",
+    hero: "/nikoo/hero/goal-hero-1.png",
     elevation: "/nikoo/images/elevation.webp",
     township: "/nikoo/images/township.png",
     masterPlan: "/nikoo/images/masterplan.jpg",
@@ -30,7 +28,7 @@ export const micrositeDisclaimer =
   "This promotional microsite is operated for project enquiries. Pricing, inventory, plans, views and timelines are indicative and must be verified before booking.";
 
 export const consentText =
-  "I agree to receive project updates by call, WhatsApp, SMS or email.";
+  "I agree to receive project updates and enquiry follow-up.";
 
 export const units = [
   {
@@ -260,6 +258,3 @@ export const locationClusters = [
     ],
   },
 ] as const;
-
-export const getWhatsAppUrl = (message: string) =>
-  `https://wa.me/919008177888?text=${encodeURIComponent(message)}`;

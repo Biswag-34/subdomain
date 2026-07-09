@@ -49,16 +49,16 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 max-h-[70svh] w-[70vw] min-w-[18rem] max-w-[34rem] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[1.35rem] border border-white/80 bg-[linear-gradient(180deg,#ffffff_0%,#fff6f3_100%)] p-4 shadow-[0_30px_90px_rgba(71,8,13,0.26)] outline-none data-[state=open]:animate-[dialog-in_260ms_ease] data-[state=closed]:animate-[dialog-out_180ms_ease] md:p-6",
+          "fixed left-1/2 top-1/2 z-50 max-h-[calc(100svh-1.5rem)] w-[min(88vw,30rem)] -translate-x-1/2 -translate-y-1/2 overflow-visible rounded-[1.25rem] border border-white/80 bg-[linear-gradient(180deg,#ffffff_0%,#fff6f3_100%)] p-4 shadow-[0_30px_90px_rgba(71,8,13,0.26)] outline-none data-[state=open]:animate-[dialog-in_260ms_ease] data-[state=closed]:animate-[dialog-out_180ms_ease] md:p-5",
           className,
         )}
         {...props}
       >
         <DialogPrimitive.Close
           aria-label="Close popup"
-          className="absolute right-3 top-3 flex size-12 items-center justify-center rounded-full border border-white/80 bg-[var(--brand-red)] text-white shadow-[0_14px_34px_rgba(143,23,32,0.28)] transition hover:bg-[var(--brand-red-strong)]"
+          className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-full border border-white/80 bg-[var(--brand-red)] text-white shadow-[0_14px_34px_rgba(143,23,32,0.28)] transition hover:bg-[var(--brand-red-strong)]"
         >
-          <X className="size-6" />
+          <X className="size-5" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
         {children}
@@ -73,7 +73,7 @@ function DialogHeader({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex flex-col gap-3 pr-14 text-left", className)}
+      className={cn("flex flex-col gap-2 pr-12 text-left", className)}
       {...props}
     />
   );
@@ -86,7 +86,7 @@ function DialogTitle({
   return (
     <DialogPrimitive.Title
       className={cn(
-        "font-[family-name:var(--font-display)] text-[2rem] leading-none tracking-[-0.05em] text-[var(--foreground)]",
+        "font-[family-name:var(--font-display)] text-[1.55rem] leading-none tracking-[-0.04em] text-[var(--foreground)] md:text-[1.8rem]",
         className,
       )}
       {...props}
@@ -100,7 +100,7 @@ function DialogDescription({
 }: React.ComponentProps<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={cn("text-sm leading-7 text-[var(--foreground-muted)]", className)}
+      className={cn("text-sm leading-6 text-[var(--foreground-muted)]", className)}
       {...props}
     />
   );

@@ -9,12 +9,10 @@ type LeadPayload = {
   lead_action?: string;
   lead_callback_time?: string;
   lead_name?: string;
-  lead_phone?: string;
   lead_unit_type?: string;
   metadata?: Record<string, unknown>;
   name?: string;
   note?: string;
-  phone?: string;
   preferredAction?: string;
   source?: string;
 };
@@ -26,10 +24,9 @@ const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL ?? "YOUR_WEBHOOK_URL_HERE";
 export async function POST(request: Request) {
   const payload = (await request.json()) as LeadPayload;
   const leadName = payload.name ?? payload.lead_name;
-  const leadPhone = payload.phone ?? payload.lead_phone;
   const leadEmail = payload.email;
 
-  if (!leadName || (!leadPhone && !leadEmail)) {
+  if (!leadName || !leadEmail) {
     return Response.json(
       { error: "Missing required lead fields." },
       { status: 400 },
@@ -50,7 +47,6 @@ export async function POST(request: Request) {
   const savedPayload = {
     ...payload,
     name: leadName,
-    phone: leadPhone,
     source: payload.source ?? "website",
     interest:
       payload.interest ??

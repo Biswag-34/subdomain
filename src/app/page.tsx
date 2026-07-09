@@ -2,13 +2,19 @@ import { LandingPage } from "@/components/landing-page";
 import {
   getBreadcrumbSchema,
   getDisclosureSchema,
+  getFaqSchema,
+  getOfferCatalogSchema,
   getProjectSchema,
+  getWebPageSchema,
 } from "@/lib/schema";
 
 export default function Page() {
   const schemas = [
     getBreadcrumbSchema(),
+    getWebPageSchema(),
     getProjectSchema(),
+    getOfferCatalogSchema(),
+    getFaqSchema(),
     getDisclosureSchema(),
   ];
 
