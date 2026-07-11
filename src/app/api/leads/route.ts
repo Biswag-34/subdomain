@@ -9,24 +9,27 @@ type LeadPayload = {
   lead_action?: string;
   lead_callback_time?: string;
   lead_name?: string;
+  lead_phone?: string;
   lead_unit_type?: string;
   metadata?: Record<string, unknown>;
   name?: string;
   note?: string;
+  phone?: string;
   preferredAction?: string;
   source?: string;
 };
 
 const submissionsDir = join(process.cwd(), "content", "submissions");
 const submissionsFile = join(submissionsDir, "leads.json");
-const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL ?? "YOUR_WEBHOOK_URL_HERE";
+const GOOGLE_SHEETS_WEBAPP_URL = process.env.GOOGLE_SHEETS_WEBAPP_URL ?? "";
+const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL ?? "";
 
 export async function POST(request: Request) {
   const payload = (await request.json()) as LeadPayload;
   const leadName = payload.name ?? payload.lead_name;
-  const leadEmail = payload.email;
+  const leadPhone = payload.phone ?? payload.lead_phone;
 
-  if (!leadName || !leadEmail) {
+  if (!leadName || !leadPhone) {
     return Response.json(
       { error: "Missing required lead fields." },
       { status: 400 },
@@ -47,6 +50,7 @@ export async function POST(request: Request) {
   const savedPayload = {
     ...payload,
     name: leadName,
+    phone: leadPhone,
     source: payload.source ?? "website",
     interest:
       payload.interest ??
@@ -56,8 +60,10 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString(),
   } as LeadPayload & { createdAt: string };
 
-  if (CRM_WEBHOOK_URL !== "YOUR_WEBHOOK_URL_HERE") {
-    const crmResponse = await fetch(CRM_WEBHOOK_URL, {
+  const webhookUrl = GOOGLE_SHEETS_WEBAPP_URL || CRM_WEBHOOK_URL;
+
+  if (webhookUrl) {
+    const webhookResponse = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,9 +71,9 @@ export async function POST(request: Request) {
       body: JSON.stringify(savedPayload),
     });
 
-    if (!crmResponse.ok) {
+    if (!webhookResponse.ok) {
       return Response.json(
-        { error: "CRM webhook failed.", fallback: true },
+        { error: "Lead webhook failed.", fallback: true },
         { status: 502 },
       );
     }
@@ -77,5 +83,9 @@ export async function POST(request: Request) {
 
   await writeFile(submissionsFile, JSON.stringify(existing, null, 2), "utf8");
 
-  return Response.json({ ok: true, crmConfigured: CRM_WEBHOOK_URL !== "YOUR_WEBHOOK_URL_HERE" });
+  return Response.json({
+    ok: true,
+    sheetsConfigured: Boolean(GOOGLE_SHEETS_WEBAPP_URL),
+    webhookConfigured: Boolean(webhookUrl),
+  });
 }

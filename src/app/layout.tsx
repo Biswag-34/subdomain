@@ -45,9 +45,9 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: absoluteUrl("/nikoo/hero/goal-hero-1.png"),
-        width: 1672,
-        height: 941,
+        url: absoluteUrl("/nikoo/hero/desktop-wide-upload.jpg"),
+        width: 1659,
+        height: 948,
         alt: "Nikoo Homes 8 Bellahalli residential towers and landscaped amenities",
       },
     ],
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nikoo Homes 8 Bellahalli | Price, Brochure, Floor Plans & Site Visit",
     description: siteDescription,
-    images: [absoluteUrl("/nikoo/hero/goal-hero-1.png")],
+    images: [absoluteUrl("/nikoo/hero/desktop-wide-upload.jpg")],
   },
   category: "real estate",
   other: {

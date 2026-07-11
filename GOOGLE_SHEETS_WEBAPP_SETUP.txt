@@ -1,0 +1,158 @@
+Nikoo Homes 8 Google Sheets lead integration
+
+Environment variable to add in .env.local:
+
+GOOGLE_SHEETS_WEBAPP_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
+
+Required Google Sheet tab name:
+
+Leads
+
+Recommended column names, in this exact order:
+
+sheet_received_at
+createdAt
+lead_action
+preferredAction
+form_name
+cta_source
+name
+phone
+lead_unit_type
+interestedIn
+source
+landing_page
+referrer
+device_type
+utm_source
+utm_medium
+utm_campaign
+utm_term
+utm_content
+gclid
+fbclid
+msclkid
+metadata_json
+raw_payload_json
+
+Google Apps Script Web App code:
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    var payload = {};
+
+    if (e && e.postData && e.postData.contents) {
+      payload = JSON.parse(e.postData.contents);
+    }
+
+    var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = spreadsheet.getSheetByName("Leads");
+
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet("Leads");
+    }
+
+    var headers = [
+      "sheet_received_at",
+      "createdAt",
+      "lead_action",
+      "preferredAction",
+      "form_name",
+      "cta_source",
+      "name",
+      "phone",
+      "lead_unit_type",
+      "interestedIn",
+      "source",
+      "landing_page",
+      "referrer",
+      "device_type",
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "gclid",
+      "fbclid",
+      "msclkid",
+      "metadata_json",
+      "raw_payload_json"
+    ];
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(headers);
+      sheet.setFrozenRows(1);
+    } else {
+      var existingHeaders = sheet.getRange(1, 1, 1, headers.length).getValues()[0];
+      var shouldResetHeaders = headers.some(function(header, index) {
+        return existingHeaders[index] !== header;
+      });
+
+      if (shouldResetHeaders) {
+        sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+        sheet.setFrozenRows(1);
+      }
+    }
+
+    var row = headers.map(function(header) {
+      if (header === "sheet_received_at") {
+        return new Date();
+      }
+
+      if (header === "metadata_json") {
+        return payload.metadata ? JSON.stringify(payload.metadata) : "";
+      }
+
+      if (header === "raw_payload_json") {
+        return JSON.stringify(payload);
+      }
+
+      return payload[header] || "";
+    });
+
+    sheet.appendRow(row);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        ok: true,
+        row: sheet.getLastRow()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        ok: false,
+        error: String(error)
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function doGet() {
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      ok: true,
+      message: "Nikoo Homes 8 lead endpoint is live"
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+Deployment steps:
+
+1. Create a Google Sheet.
+2. Rename the first tab to Leads, or let the script create it.
+3. Open Extensions > Apps Script.
+4. Paste the code above.
+5. Click Deploy > New deployment.
+6. Select type Web app.
+7. Execute as: Me.
+8. Who has access: Anyone.
+9. Deploy and copy the Web App URL ending in /exec.
+10. Paste it into .env.local as GOOGLE_SHEETS_WEBAPP_URL.
+11. Restart the local or production Next.js server after changing env values.
+

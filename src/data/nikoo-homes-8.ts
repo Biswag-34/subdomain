@@ -3,8 +3,8 @@ export const projectFacts = {
   publicTitle: "Bhartiya City Nikoo Homes 8",
   developer: "Bhartiya Urban Pvt. Ltd.",
   locationShort: "Bellahalli, Bengaluru",
-  emailLabel: "Email Enquiry",
-  emailHref: "#final-enquiry",
+  enquiryLabel: "Project Enquiry",
+  enquiryHref: "#final-enquiry",
   socials: {
     facebook: "https://www.facebook.com/NikooHomesIndia/",
     instagram: "https://www.instagram.com/nikoohomes/",
@@ -17,7 +17,7 @@ export const projectFacts = {
   mapUrl:
     "https://www.google.com/maps/search/Nikoo+Homes+8+Thanisandra+Main+Road+Bengaluru",
   images: {
-    hero: "/nikoo/hero/goal-hero-1.png",
+    hero: "/nikoo/hero/desktop-wide-upload.jpg",
     elevation: "/nikoo/images/elevation.webp",
     township: "/nikoo/images/township.png",
     masterPlan: "/nikoo/images/masterplan.jpg",

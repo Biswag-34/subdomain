@@ -15,7 +15,7 @@ export default function ThankYouPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[var(--brand-red-deep)] text-white">
       <Image
-        src="/nikoo/hero/goal-hero-1.png"
+        src="/nikoo/hero/desktop-wide-upload.jpg"
         alt="Nikoo Homes 8 township view"
         fill
         sizes="100vw"

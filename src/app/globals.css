@@ -60,6 +60,17 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid rgba(220, 47, 61, 0.82);
+  outline-offset: 3px;
+}
+
 .section-shell {
   @apply mx-auto w-[min(100%,78rem)] px-4 md:px-5;
 }
@@ -230,6 +241,15 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
   .reveal-card {
     opacity: 1;
     transform: none;

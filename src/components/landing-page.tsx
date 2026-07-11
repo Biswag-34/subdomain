@@ -3,8 +3,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import {
   AfricanTree,
   Brain,
@@ -58,8 +56,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-gsap.registerPlugin(useGSAP);
-
 type LeadAction = "price_sheet" | "brochure" | "floor_plan" | "site_visit";
 type ModalKind = LeadAction;
 type Unit = (typeof units)[number];
@@ -91,13 +87,21 @@ type LeadModal = {
 
 const mainLeadFormSchema = z.object({
   lead_name: z.string().trim().min(2, "Please enter your name."),
-  email: z.string().trim().email("Please enter a valid email address."),
+  lead_phone: z
+    .string()
+    .trim()
+    .min(7, "Please enter a valid phone number.")
+    .regex(/^[0-9+\-\s()]+$/, "Use numbers only."),
   lead_unit_type: z.string().min(1, "Please choose an apartment option."),
 });
 
 const secondaryLeadFormSchema = z.object({
   lead_name: z.string().trim().min(2, "Please enter your name."),
-  email: z.string().trim().email("Please enter a valid email address."),
+  lead_phone: z
+    .string()
+    .trim()
+    .min(7, "Please enter a valid phone number.")
+    .regex(/^[0-9+\-\s()]+$/, "Use numbers only."),
 });
 
 type MainLeadFormValues = z.infer<typeof mainLeadFormSchema>;
@@ -136,17 +140,35 @@ const heroHighlights = [
   "Bhartiya City living with resort-style amenities",
 ] as const;
 
+const faqItems = [
+  {
+    question: "Where is Nikoo Homes 8 located?",
+    answer:
+      "Nikoo Homes 8 is located in Bellahalli, Bengaluru, with connectivity to Thanisandra Main Road, Bhartiya City, Manyata Tech Park and airport-side routes.",
+  },
+  {
+    question: "What amenities are planned at Nikoo Homes 8?",
+    answer:
+      "Amenities include a gymnasium, 45,000 sq ft clubhouse, indoor games room, workspaces, jogging and skating track, sports courts, meditation yoga deck, landscaped gardens, kids play area, party area and retail spaces.",
+  },
+  {
+    question: "How can I get the Nikoo Homes 8 brochure and floor plans?",
+    answer:
+      "Use the enquiry or brochure forms on the landing page to request the latest brochure, apartment options and floor plan details.",
+  },
+] as const;
+
 const heroImages = {
-  desktop: "/nikoo/hero/desktop-wide-upload.png",
-  tablet: "/nikoo/hero/goal-hero-2.png",
-  mobileLarge: "/nikoo/hero/goal-hero-3.png",
-  mobile: "/nikoo/hero/goal-hero-4.png",
+  desktop: "/nikoo/hero/desktop-wide-upload.jpg",
+  tablet: "/nikoo/hero/goal-hero-2.jpg",
+  mobileLarge: "/nikoo/hero/goal-hero-3.jpg",
+  mobile: "/nikoo/hero/goal-hero-4.jpg",
 } as const;
 
 const locationMapImages = {
-  desktop: "/nikoo/location/map-desktop.png",
-  tablet: "/nikoo/location/map-tablet.png",
-  mobile: "/nikoo/location/map-mobile.png",
+  desktop: "/nikoo/location/map-desktop.jpg",
+  tablet: "/nikoo/location/map-tablet.jpg",
+  mobile: "/nikoo/location/map-mobile.jpg",
 } as const;
 
 const amenityIcons: Record<string, IconType> = {
@@ -282,7 +304,7 @@ function MainLeadForm({
     resolver: zodResolver(mainLeadFormSchema),
     defaultValues: {
       lead_name: "",
-      email: "",
+      lead_phone: "",
       lead_unit_type: selectedUnit.label,
     },
   });
@@ -321,9 +343,10 @@ function MainLeadForm({
         timestamp: new Date().toISOString(),
         lead_action: "price_sheet",
         lead_name: values.lead_name,
-        email: values.email,
+        lead_phone: values.lead_phone,
         lead_unit_type: values.lead_unit_type,
         name: values.lead_name,
+        phone: values.lead_phone,
         interestedIn: values.lead_unit_type,
         preferredAction: "price_sheet",
         source: ctaSource,
@@ -337,7 +360,7 @@ function MainLeadForm({
       setStatus("success");
       reset({
         lead_name: "",
-        email: "",
+        lead_phone: "",
         lead_unit_type: selectedUnit.label,
       });
       onSuccess?.(values);
@@ -361,18 +384,18 @@ function MainLeadForm({
           {errors.lead_name ? <p className="form-error">{errors.lead_name.message}</p> : null}
         </div>
         <div>
-          <label className="form-label text-[var(--foreground)]" htmlFor={`${formName}-email`}>
-            Email
+          <label className="form-label text-[var(--foreground)]" htmlFor={`${formName}-phone`}>
+            Number
           </label>
           <input
-            id={`${formName}-email`}
+            id={`${formName}-phone`}
             className="compact-input"
-            autoComplete="email"
-            inputMode="email"
-            type="email"
-            {...register("email")}
+            autoComplete="tel"
+            inputMode="tel"
+            type="tel"
+            {...register("lead_phone")}
           />
-          {errors.email ? <p className="form-error">{errors.email.message}</p> : null}
+          {errors.lead_phone ? <p className="form-error">{errors.lead_phone.message}</p> : null}
         </div>
       </div>
 
@@ -453,14 +476,14 @@ function SecondaryLeadForm({
     resolver: zodResolver(secondaryLeadFormSchema),
     defaultValues: {
       lead_name: "",
-      email: "",
+      lead_phone: "",
     },
   });
 
   useEffect(() => {
     reset({
       lead_name: "",
-      email: "",
+      lead_phone: "",
     });
   }, [reset, selectedUnit.slug]);
 
@@ -475,9 +498,10 @@ function SecondaryLeadForm({
         timestamp: new Date().toISOString(),
         lead_action: action,
         lead_name: values.lead_name,
-        email: values.email,
+        lead_phone: values.lead_phone,
         lead_unit_type: selectedUnit.label,
         name: values.lead_name,
+        phone: values.lead_phone,
         interestedIn: selectedUnit.label,
         preferredAction: action,
         source: ctaSource,
@@ -491,7 +515,7 @@ function SecondaryLeadForm({
       setStatus("success");
       reset({
         lead_name: "",
-        email: "",
+        lead_phone: "",
       });
     } catch {
       setStatus("error");
@@ -508,18 +532,18 @@ function SecondaryLeadForm({
         {errors.lead_name ? <p className="form-error">{errors.lead_name.message}</p> : null}
       </div>
       <div>
-        <label className="form-label" htmlFor={`${formName}-email`}>
-          Email
+        <label className="form-label" htmlFor={`${formName}-phone`}>
+          Number
         </label>
         <input
-          id={`${formName}-email`}
+          id={`${formName}-phone`}
           className="compact-input"
-          autoComplete="email"
-          inputMode="email"
-          type="email"
-          {...register("email")}
+          autoComplete="tel"
+          inputMode="tel"
+          type="tel"
+          {...register("lead_phone")}
         />
-        {errors.email ? <p className="form-error">{errors.email.message}</p> : null}
+        {errors.lead_phone ? <p className="form-error">{errors.lead_phone.message}</p> : null}
       </div>
       <Button
         type="submit"
@@ -580,20 +604,6 @@ export function LandingPage() {
       timestamp: new Date().toISOString(),
     };
   }, []);
-
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-
-      gsap
-        .timeline({ defaults: { ease: "power2.out" } })
-        .from(".site-nav-shell", { autoAlpha: 0, y: -12, duration: 0.35 })
-        .from(".hero-entry", { autoAlpha: 0, y: 24, duration: 0.48, stagger: 0.08 }, "-=0.08");
-    },
-    { scope: shellRef },
-  );
 
   useLayoutEffect(() => {
     if (typeof window === "undefined") {
@@ -886,7 +896,6 @@ export function LandingPage() {
               sizes="100vw"
               className="block h-auto w-full sm:hidden"
               priority
-              unoptimized
             />
             <Image
               src={heroImages.mobileLarge}
@@ -896,7 +905,6 @@ export function LandingPage() {
               sizes="100vw"
               className="hidden h-auto w-full sm:block md:hidden"
               priority
-              unoptimized
             />
             <Image
               src={heroImages.tablet}
@@ -906,7 +914,6 @@ export function LandingPage() {
               sizes="100vw"
               className="hidden h-auto w-full md:block"
               priority
-              unoptimized
             />
           </div>
 
@@ -1249,7 +1256,6 @@ export function LandingPage() {
                         fill
                         sizes="100vw"
                         className="object-contain sm:hidden"
-                        unoptimized
                       />
                       <Image
                         src={locationMapImages.tablet}
@@ -1257,7 +1263,6 @@ export function LandingPage() {
                         fill
                         sizes="100vw"
                         className="hidden object-contain sm:block lg:hidden"
-                        unoptimized
                       />
                       <Image
                         src={locationMapImages.desktop}
@@ -1265,7 +1270,6 @@ export function LandingPage() {
                         fill
                         sizes="100vw"
                         className="hidden object-contain lg:block"
-                        unoptimized
                       />
                       <div className="pointer-events-none absolute inset-x-4 bottom-4 flex items-center justify-between gap-4">
                         <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-red)] shadow-[0_14px_30px_rgba(71,8,13,0.08)]">
@@ -1336,6 +1340,30 @@ export function LandingPage() {
         </section>
 
         <section id="final-enquiry" className="bg-[var(--surface-alt)]">
+          <div className="section-shell pt-12 md:pt-16">
+            <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+              <SectionHeader
+                title="Frequently Asked Questions"
+                body="Quick answers about location, amenities, brochure and floor plan requests."
+              />
+
+              <div className="grid gap-3">
+                {faqItems.map((item) => (
+                  <details
+                    key={item.question}
+                    className="group rounded-[1.25rem] border border-[var(--line)] bg-white px-4 py-3 shadow-[0_14px_34px_rgba(71,8,13,0.05)]"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-base font-semibold text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]">
+                      <span>{item.question}</span>
+                      <TbChevronDown className="shrink-0 text-[1.25rem] text-[var(--brand-red)] transition group-open:rotate-180" />
+                    </summary>
+                    <p className="mt-3 text-sm leading-6 text-[var(--foreground-muted)]">{item.answer}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="section-shell py-12 md:py-16">
             <div className="grid gap-6 rounded-[2rem] bg-[var(--surface)] p-5 shadow-[0_24px_70px_rgba(71,8,13,0.08)] lg:grid-cols-[0.82fr_1.18fr] lg:p-8">
               <div className="relative pl-4">
@@ -1486,7 +1514,6 @@ export function LandingPage() {
               fill
               sizes="100vw"
               className="object-contain sm:hidden"
-              unoptimized
             />
             <Image
               src={locationMapImages.tablet}
@@ -1494,7 +1521,6 @@ export function LandingPage() {
               fill
               sizes="100vw"
               className="hidden object-contain sm:block lg:hidden"
-              unoptimized
             />
             <Image
               src={locationMapImages.desktop}
@@ -1502,7 +1528,6 @@ export function LandingPage() {
               fill
               sizes="100vw"
               className="hidden object-contain lg:block"
-              unoptimized
             />
           </div>
         </div>
