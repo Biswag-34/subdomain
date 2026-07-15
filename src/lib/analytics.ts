@@ -6,6 +6,7 @@ export type AnalyticsPayload = Record<
 declare global {
   interface Window {
     dataLayer?: AnalyticsPayload[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -19,6 +20,8 @@ export function trackEvent(eventName: string, payload: AnalyticsPayload = {}) {
     event: eventName,
     ...payload,
   });
+
+  window.gtag?.("event", eventName, payload);
 }
 
 export function getLeadMetadata(

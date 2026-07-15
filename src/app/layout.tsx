@@ -6,7 +6,12 @@ import { absoluteUrl, siteDescription, siteKeywords, siteName, siteUrl } from "@
 
 import "./globals.css";
 
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "";
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID?.trim() || "GTM-5BVDMXBN";
+const GOOGLE_TAG_ID =
+  process.env.NEXT_PUBLIC_GOOGLE_TAG_ID?.trim() ||
+  process.env.NEXT_PUBLIC_GTAG_ID?.trim() ||
+  process.env.NEXT_PUBLIC_GA_ID?.trim() ||
+  "";
 
 const bodyFont = Outfit({
   variable: "--font-body",
@@ -82,7 +87,7 @@ export default function RootLayout({
       className={`${bodyFont.variable} ${displayFont.variable} antialiased`}
     >
     <head>
-    {/* Google Tag Manager */}
+    {GTM_ID ? (
         <Script id="google-tag-manager" strategy="beforeInteractive">
           {`
             (function(w,d,s,l,i){
@@ -100,10 +105,37 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','${GTM_ID}');
           `}
         </Script>
+    ) : null}
+    {GOOGLE_TAG_ID ? (
+      <>
+        <Script
+          id="google-tag-loader"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-tag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_TAG_ID}');
+          `}
+        </Script>
+      </>
+    ) : null}
     </head>
       <body>
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BVDMXBN"
-height="0" width="0" style={{ display: "none", visibility: "hidden" }}></iframe></noscript>
+        {GTM_ID ? (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        ) : null}
         <Script id="scroll-reset-guard" strategy="beforeInteractive">
           {`(() => {
             const resetScroll = () => {

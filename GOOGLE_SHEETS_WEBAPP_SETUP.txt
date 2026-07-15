@@ -4,6 +4,17 @@ Environment variable to add in .env.local:
 
 GOOGLE_SHEETS_WEBAPP_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
 
+Vercel production environment variables:
+
+GOOGLE_SHEETS_WEBAPP_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
+NEXT_PUBLIC_GTM_ID=GTM-5BVDMXBN
+
+Optional, only if you use a direct Google tag / GA4 tag in addition to GTM:
+
+NEXT_PUBLIC_GOOGLE_TAG_ID=G-XXXXXXXXXX
+
+After changing environment variables in Vercel, redeploy the site. Existing deployments do not automatically pick up new build-time NEXT_PUBLIC_* values.
+
 Required Google Sheet tab name:
 
 Leads
@@ -155,4 +166,3 @@ Deployment steps:
 9. Deploy and copy the Web App URL ending in /exec.
 10. Paste it into .env.local as GOOGLE_SHEETS_WEBAPP_URL.
 11. Restart the local or production Next.js server after changing env values.
-
