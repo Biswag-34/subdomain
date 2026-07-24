@@ -281,7 +281,6 @@ function MainLeadForm({
   submitLabel,
   compact = false,
   showUnitField = true,
-  onSuccess,
 }: {
   hiddenBase: HiddenLeadFields;
   formName: string;
@@ -290,9 +289,8 @@ function MainLeadForm({
   submitLabel: string;
   compact?: boolean;
   showUnitField?: boolean;
-  onSuccess?: (values: MainLeadFormValues) => void;
 }) {
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "error">("idle");
   const [started, setStarted] = useState(false);
   const {
     formState: { errors, isSubmitting },
@@ -357,13 +355,12 @@ function MainLeadForm({
           unitSelected: values.lead_unit_type,
         }),
       });
-      setStatus("success");
       reset({
         lead_name: "",
         lead_phone: "",
         lead_unit_type: selectedUnit.label,
       });
-      onSuccess?.(values);
+      window.location.assign("/thank-you");
     } catch {
       setStatus("error");
     }
@@ -436,12 +433,6 @@ function MainLeadForm({
         </p>
       ) : null}
 
-      {status === "success" && !onSuccess ? (
-        <p className="text-sm font-semibold text-[var(--brand-red)]">
-          Thank you. We have your request and will connect shortly.
-        </p>
-      ) : null}
-
       {status === "error" ? (
         <p className="text-sm text-[var(--foreground-muted)]">
           We could not submit right now. Please try again in a moment.
@@ -466,7 +457,7 @@ function SecondaryLeadForm({
   action: LeadAction;
   submitLabel: string;
 }) {
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "error">("idle");
   const {
     formState: { errors, isSubmitting },
     handleSubmit,
@@ -512,11 +503,11 @@ function SecondaryLeadForm({
           unitSelected: selectedUnit.label,
         }),
       });
-      setStatus("success");
       reset({
         lead_name: "",
         lead_phone: "",
       });
+      window.location.assign("/thank-you");
     } catch {
       setStatus("error");
     }
@@ -552,11 +543,6 @@ function SecondaryLeadForm({
       >
         {isSubmitting ? "Sending..." : submitLabel}
       </Button>
-      {status === "success" ? (
-        <p className="text-sm font-semibold text-[var(--brand-red)]">
-          Thank you. We have your request and will connect shortly.
-        </p>
-      ) : null}
       {status === "error" ? (
         <p className="text-sm text-[var(--foreground-muted)]">
           Submission failed just now. Please try again in a moment.
@@ -576,7 +562,6 @@ export function LandingPage() {
   >(locationClusters[0]?.label ?? "Landmarks");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hasScrolledHeader, setHasScrolledHeader] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
   const [isLocationMapOpen, setIsLocationMapOpen] = useState(false);
 
   const hiddenBase = useMemo<HiddenLeadFields>(() => {
@@ -724,24 +709,6 @@ export function LandingPage() {
       unit,
     });
   };
-
-  const showSuccessToast = () => {
-    setToastMessage("Thank you. Your enquiry has been received.");
-  };
-
-  const redirectToThankYou = () => {
-    window.location.assign("/thank-you");
-  };
-
-  useEffect(() => {
-    if (!toastMessage) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => setToastMessage(""), 3600);
-
-    return () => window.clearTimeout(timer);
-  }, [toastMessage]);
 
   const scrollToSection = (sectionId: string, source: string) => {
     if (typeof window === "undefined") {
@@ -969,7 +936,6 @@ export function LandingPage() {
                   selectedUnit={selectedUnit}
                   submitLabel="Enquire Now"
                   compact
-                  onSuccess={showSuccessToast}
                 />
               </div>
             </div>
@@ -993,7 +959,6 @@ export function LandingPage() {
                 ctaSource="mobile-hero-main-form"
                 selectedUnit={selectedUnit}
                 submitLabel="Enquire Now"
-                onSuccess={showSuccessToast}
               />
             </div>
           </div>
@@ -1392,7 +1357,6 @@ export function LandingPage() {
                   ctaSource="final-main-form"
                   selectedUnit={selectedUnit}
                   submitLabel="Schedule Site Visit"
-                  onSuccess={redirectToThankYou}
                 />
               </div>
             </div>
@@ -1530,20 +1494,6 @@ export function LandingPage() {
               className="hidden object-contain lg:block"
             />
           </div>
-        </div>
-      ) : null}
-
-      {toastMessage ? (
-        <div
-          role="status"
-          aria-live="polite"
-          className="toast-message fixed left-1/2 top-5 z-[60] w-[min(calc(100vw-1.5rem),34rem)] -translate-x-1/2 rounded-[1.6rem] border border-white/70 px-5 py-5 text-center text-base font-bold text-white shadow-[0_30px_90px_rgba(71,8,13,0.28)] backdrop-blur-xl md:px-7 md:py-6 md:text-lg"
-        >
-          <span className="mx-auto mb-3 block h-1.5 w-20 rounded-full bg-white/90 shadow-[0_0_22px_rgba(255,255,255,0.55)]" />
-          {toastMessage}
-          <span className="mt-2 block text-sm font-medium text-white/82">
-            Our team will connect with you shortly.
-          </span>
         </div>
       ) : null}
 
